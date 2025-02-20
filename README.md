@@ -1,15 +1,42 @@
-# CSC_335-Project
-Large Project for CSC 335
-
 # Music Library Project
 
 ## Overview
-The Music Library Project is a simple Java-based application designed to manage and search a collection of music albums and songs. This project is structured using a simplified Model-View-Controller (MVC) pattern. The primary goal is to load album data from text files (stored in a `resources` folder), maintain the order of songs, and eventually allow users to search and manage their music library.
+
+The Music Library Project is a Java-based application that manages a collection of music albums and songs. The project demonstrates a simplified Model-View-Controller (MVC) architecture, where:
+- **Model:** Contains the core data classes such as `Album`, `Song`, `PlayList`, `LibraryModel`, and `Rating`.
+- **Database:** The `MusicStore` class simulates a pseudo-database by loading album data from text files.
+- **View:** The `TextView` class provides a text-based user interface for interacting with the music library.
+- **Main:** The entry point of the application.
 
 ## Features
-- **Album Data Loading:** Reads album metadata and song lists from text files.
-- **Ordered Song Storage:** Maintains the exact order of songs as listed in each album file.
-- **Simple Text-Based User Interface:** Provides basic commands to interact with the music library.
-- **Modular Architecture:** Organized into packages (`model`, `store`, `view`) for clarity and ease of maintenance.
-- **Testing:** Includes unit tests for key backend components to ensure at least 90% code coverage.
-- **Documentation:** Includes Javadoc comments for classes and methods to facilitate understanding and use of the code.
+
+- **Album Management:** Load albums from text files, preserving the order of songs.
+- **Song Management:** Each song has a title, album, artist, a rating (using an enum), and a favorite flag.
+- **Playlist Management:** Create and manage playlists with their own rating and favorite status.
+- **Library Model:** Stores albums that the user adds to their personal library.
+- **Text-Based User Interface:** Interact with the music library through simple command-line prompts.
+
+## Project Structure
+
+MusicLibraryProject/
+├── src/
+│   ├── model/
+│   │   ├── Album.java
+│   │   └── LibraryModel.java
+│   ├── store/
+│   │   └── MusicStore.java
+│   ├── view/
+│   │   └── TextView.java
+│   └── Main.java
+├── resources/
+│   ├── albums.txt
+│   ├── <AlbumTitle>_<Artist>.txt
+└── test/
+    └── (Test Files)
+
+## Installation
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/MusicLibraryProject.git
