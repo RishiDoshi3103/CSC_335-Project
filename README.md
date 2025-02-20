@@ -16,24 +16,6 @@ The Music Library Project is a Java-based application that manages a collection 
 - **Library Model:** Stores albums that the user adds to their personal library.
 - **Text-Based User Interface:** Interact with the music library through simple command-line prompts.
 
-## Project Structure
-
-MusicLibraryProject/
-├── src/
-│   ├── model/
-│   │   ├── Album.java
-│   │   └── LibraryModel.java
-│   ├── store/
-│   │   └── MusicStore.java
-│   ├── view/
-│   │   └── TextView.java
-│   └── Main.java
-├── resources/
-│   ├── albums.txt
-│   ├── <AlbumTitle>_<Artist>.txt
-└── test/
-    └── (Test Files)
-
 ## Installation
 
 1. **Clone the Repository:**
