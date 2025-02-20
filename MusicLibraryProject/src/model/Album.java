@@ -9,12 +9,16 @@ public class Album {
 	private String genre;
 	private int year;
 	private List<String> songs;
+	private Rating rating;
+	private boolean favorite;
 	
 	public Album(String title, String artist, String genre, int year) {
 		this.title = title;
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
+		this.rating = Rating.NOT_RATED;
+		this.favorite = false;
 		
 		// Order for the Songs and the Artist are maintain hear.
 		this.songs = new ArrayList<>();
@@ -44,8 +48,27 @@ public class Album {
 		return songs;
 	}
 	
+	public Rating getRating() {
+		return rating;
+	}
+	
+	public void setRating(Rating rating) {
+		if(rating == null) {
+			throw new IllegalArgumentException("Rating Cannot Be Null.");
+		}
+		this.rating = rating;
+	}
+	
+	public boolean isFavortite() {
+		return favorite;
+	}
+	
+	public void setFavorite(boolean favorite) {
+		this.favorite = favorite;
+	}
+	
 	@Override
 	public String toString () {
-		return title + " by " + artist + " (" + year + ") " + genre + "\nSongs:" + songs;
+		return title + " by " + artist + " (" + year + ") - " + genre + "\nRating: "+ rating + (favorite ? "[Favorite]" : "") +"\nSongs:" + songs;
 	}
 }
