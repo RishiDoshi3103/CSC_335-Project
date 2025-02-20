@@ -3,8 +3,6 @@
  *  in the database. Each song contains a title, album, and artist
  *  associated with it.
  *  
- *  WIP - Consider adding a rating, maybe Enum class?
- *  
  *  Per LA1 specs:
  *  - the ratings are 1 to 5
  *	- songs do not have to be rated so there is no default rating
@@ -18,12 +16,13 @@ public class Song {
 	private String title;
 	private String album;
 	private String artist;
-	// private Rating rating;
+	private Rating rating;
 	
 	public Song(String title, String album, String artist) {
 		this.title = title;
 		this.album = album;
 		this.artist = artist;
+		this.rating = Rating.NOT_RATED;
 	}
 	
 	public String getTitle() {
@@ -36,5 +35,13 @@ public class Song {
 	
 	public String getArtist() {
 		return this.artist;
+	}
+	
+	public void setRating(Rating rate) {
+		this.rating = rate;
+	}
+	
+	public Rating getRating() {
+		return this.rating;
 	}
 }
