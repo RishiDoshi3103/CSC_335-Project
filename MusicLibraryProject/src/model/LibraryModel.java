@@ -12,7 +12,7 @@
  * - Get a list of song titles √
  * - Get a list of artists √
  * - Get a list of playlists √
- * - Get a list of favorite songs (songs with 5 rating)
+ * - Get a list of favorite songs (songs with 5 rating) √
  * 
  * Please adjust functions to return whatever types/designs are
  * needed for functionality in other classes. Or let me know! :)
@@ -107,10 +107,20 @@ public class LibraryModel {
 		}
 	}
 	
+	// Temporary, for testing purposes
+	public void tempAddSong(Song song) {
+		this.library.add(song);
+	}
+	
 	public void addSong(Song song) {
 		// Need MusicStore song getter to add
 		//this.library.add(store.getSong(song.getTitle())); // By song title?
 		
+	}
+	
+	// Temporary, for testing purposes
+	public void tempAddAlbum(Album album) {
+		this.albums.add(album);
 	}
 	
 	public void addAlbum(String album) {
