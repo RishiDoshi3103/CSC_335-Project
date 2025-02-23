@@ -24,6 +24,13 @@ public class PlayList {
 		return songs;
 	}
 	
+	public void addSong(Song song) {
+	    if (song != null) {
+	        songs.add(song);
+	    }
+	}
+
+	
 	public boolean removeSong(Song song) {
 		return songs.remove(song);
 	}
