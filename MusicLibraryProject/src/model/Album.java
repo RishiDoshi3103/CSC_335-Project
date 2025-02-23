@@ -7,12 +7,12 @@ public class Album {
 	private String title;
 	private String artist;
 	private String genre;
-	private int year;
+	private String year;
 	private List<String> songs;
 	private Rating rating;
 	private boolean favorite;
 	
-	public Album(String title, String artist, String genre, int year) {
+	public Album(String title, String artist, String genre, String year) {
 		this.title = title;
 		this.artist = artist;
 		this.genre = genre;
@@ -40,7 +40,7 @@ public class Album {
 		return genre;
 	}
 
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
