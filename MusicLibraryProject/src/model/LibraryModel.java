@@ -35,6 +35,9 @@ public class LibraryModel {
 		this.store = database;
 		this.library = new ArrayList<Song>();
 		this.playlists = new ArrayList<PlayList>();
+		// This for the tempAddAlbum()
+		// By Adding this want call the NullPointerException 
+		this.albums = new ArrayList<Album>();
 	}
 	
 	

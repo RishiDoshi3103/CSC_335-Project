@@ -17,12 +17,14 @@ public class Song {
 	private String album;
 	private String artist;
 	private Rating rating;
+	private boolean favorite;
 	
 	public Song(String title, String album, String artist) {
 		this.title = title;
 		this.album = album;
 		this.artist = artist;
 		this.rating = Rating.NOT_RATED;
+		this.favorite = false;
 	}
 	
 	public String getTitle() {
@@ -38,15 +40,26 @@ public class Song {
 	}
 	
 	public void setRating(Rating rate) {
+		if(rate == null)
+			throw new IllegalArgumentException("Rating cannot be null.");
 		this.rating = rate;
+		/**
+		 * This way, if someone calls song.setRating(Rating.FIVE), 
+		 * it will automatically sets favorite = true.
+		 */
+		this.favorite = (rate == Rating.FIVE);
 	}
 	
 	public Rating getRating() {
 		return this.rating;
 	}
 	
+  public boolean isFavorite() {
+		return favorite;
+  
 	@Override
 	public String toString() {
 		return title + " by " + artist + " | Album: " + album;
+
 	}
 }
