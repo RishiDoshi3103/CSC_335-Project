@@ -47,6 +47,6 @@ public class Song {
 	
 	@Override
 	public String toString() {
-		return title + " by " + artist + "| Album: " + album;
+		return title + " by " + artist + " | Album: " + album;
 	}
 }
