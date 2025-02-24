@@ -31,9 +31,9 @@ public enum Rating {
 	/**
      * Returns a Rating enum for a given integer value.
      *
-     * Value the integer value (0 to 5)
-     * The corresponding Rating, or NOT_RATED if value is 0.
-     * IllegalArgumentException if the value is outside the range 0-5.
+     * @param value the integer value (0 to 5)
+     * @return the corresponding Rating, or throws an exception if not found.
+     * @throws IllegalArgumentException if the value is outside the range 0-5.
      */
 	
 	public static Rating fromInt(int value) {
