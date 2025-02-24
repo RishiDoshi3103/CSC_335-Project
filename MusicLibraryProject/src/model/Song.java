@@ -44,4 +44,9 @@ public class Song {
 	public Rating getRating() {
 		return this.rating;
 	}
+	
+	@Override
+	public String toString() {
+		return title + " by " + artist + "| Album: " + album;
+	}
 }
