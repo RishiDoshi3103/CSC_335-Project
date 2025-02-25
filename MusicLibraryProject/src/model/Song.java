@@ -54,7 +54,12 @@ public class Song {
 		return this.rating;
 	}
 	
-	public boolean isFavorite() {
+  public boolean isFavorite() {
 		return favorite;
+  
+	@Override
+	public String toString() {
+		return title + " by " + artist + " | Album: " + album;
+
 	}
 }

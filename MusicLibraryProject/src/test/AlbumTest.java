@@ -14,7 +14,7 @@ class AlbumTest {
 
     @BeforeEach
     void setUp() {
-        album = new Album("Test Album", "Test Artist", "Rock", 2025);
+        album = new Album("Test Album", "Test Artist", "Rock", "2025");
     }
 
     @Test
@@ -22,7 +22,7 @@ class AlbumTest {
         assertEquals("Test Album", album.getTitle());
         assertEquals("Test Artist", album.getArtist());
         assertEquals("Rock", album.getGenre());
-        assertEquals(2025, album.getYear());
+        assertEquals("2025", album.getYear());
         assertTrue(album.getSongs().isEmpty(), "Songs list should be empty initially.");
         assertEquals(Rating.NOT_RATED, album.getRating(), "Default rating should be NOT_RATED.");
         assertFalse(album.isFavortite(), "Album should not be favorite by default.");

@@ -13,22 +13,22 @@ public class Album {
 	private String title;
 	private String artist;
 	private String genre;
-	private int year;
+	private String year;
 	private List<String> songs;		// List of song titles
 	private Rating rating;
 	private boolean favorite;
 	
-	/**
-     * Constructs a new Album with the given details.
-     * The album's initial rating is set to NOT_RATED and it is not marked as favorite.
-     *
-     * @param title  the album title
-     * @param artist the album artist
-     * @param genre  the genre of the album
-     * @param year   the release year
-     */
-	
-	public Album(String title, String artist, String genre, int year) {
+  /**
+   * Constructs a new Album with the given details.
+   * The album's initial rating is set to NOT_RATED and it is not marked as favorite.
+   *
+   * @param title  the album title
+   * @param artist the album artist
+   * @param genre  the genre of the album
+   * @param year   the release year
+   */
+	public Album(String title, String artist, String genre, String year) {
+
 		this.title = title;
 		this.artist = artist;
 		this.genre = genre;
@@ -62,7 +62,7 @@ public class Album {
 		return genre;
 	}
 
-	public int getYear() {
+	public String getYear() {
 		return year;
 	}
 
