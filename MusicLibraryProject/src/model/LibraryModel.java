@@ -46,6 +46,18 @@ public class LibraryModel {
 		return false;
 	}
 	
+	public ArrayList<Song> searchSongsByTitle(String title) {
+		ArrayList<Song> list = new ArrayList<Song>();
+		for (Song song : this.library) {
+			if (song.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					song.getTitle().toLowerCase().contains(title.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				jingle.setRating(song.getRating());
+				list.add(jingle);
+			}
+		}
+		return list;
+	}
 	
 	/**
 	 * This helper function checks if a song is present in the current user library.

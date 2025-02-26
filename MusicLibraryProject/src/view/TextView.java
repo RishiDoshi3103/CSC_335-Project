@@ -17,9 +17,14 @@ public class TextView {
 		
 		while(true) {
 			System.out.println("\n--- Rishi & Kyle's Music Library ---");
-			System.out.println("1. Search Store");
-			System.out.println("2. Access Library");
-			System.out.println("3. Exit");
+			System.out.println("- Store:");
+			System.out.println("	1. Search Store");
+			System.out.println("- Library:");
+			System.out.println("	2. Songs");
+			System.out.println("	3. Artists");
+			System.out.println("	4. Albums");
+			System.out.println("	5. Playlists");
+			System.out.println("6. Exit Music Player");
 			System.out.print("Enter Choice: ");
 			
 			String choice = scanner.nextLine().trim();
@@ -29,9 +34,18 @@ public class TextView {
 					searchStore(scanner);
 					break;
 				case "2":
-					//accessLibrary(scanner);
+					// libSongs(scanner);
 					break;
 				case "3":
+					// libArtists(scanner);
+					break;
+				case "4":
+					// libAlbums(scannner);
+					break;
+				case "5":
+					// libPlaylists(scanner);
+					break;
+				case "6":
 					System.out.println("--- Exiting ---");
 					scanner.close();
 					System.exit(0);

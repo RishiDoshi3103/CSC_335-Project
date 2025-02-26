@@ -153,86 +153,9 @@ public class MusicStore {
 		}
 		return list;
 	}
-	//-------------------------------------------
-	/**
-	public String searchSongsByTitle(String title) {
-		boolean found = false;
-		String output = "";
-		for (Song song : this.inventory) {
-			if (song.getTitle().equals(title)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for songs with title: " + title + ".");
-			return "0 results for songs with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-		
-	}
 	
 	
-	public String searchSongsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
-		for (Song song : this.inventory) {
-			if (song.getArtist().equals(artist)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for songs with artist: " + artist + ".");
-			return "0 results for songs with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public String searchAlbumsByTitle(String title) {
-		boolean found = false;
-		String output = "";
-		for (Album album : this.album_stock) {
-			if (album.getTitle().equals(title)) {
-				output += album.toString() + "\n";
-				//System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with title: " + title + ".");
-			return "0 results for albums with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public String searchAlbumsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
-		for (Album album : this.album_stock) {
-			if (album.getArtist().equals(artist)) {
-				output += album.toString() + "\n";
-				System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with artist: " + artist + ".");
-			return "0 results for albums with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	*/
+	// ----------------------------------------
 	public Song getSongByTitle(String title) {
 		for (Song song : this.inventory) {
 			if (song.getTitle().equals(title)) {
@@ -331,13 +254,5 @@ public class MusicStore {
 		}
 	}
 	
-	
-	public ArrayList<Album> getAlbumsForTest() {
-		return this.album_stock;
-	}
-	
-	public ArrayList<Song> getSongsForTest() {
-		return this.inventory;
-	}
 
 }
