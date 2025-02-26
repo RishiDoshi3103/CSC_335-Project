@@ -317,7 +317,7 @@ public class TextView {
         ArrayList<Song> found = library.searchSongByTitle(title);
         if (found.size() > 0) {
            for (Song song : found) {
-        	   System.out.println()
+        	   System.out.println();
            }
         } else {
             System.out.println("Song not found in library.");
@@ -458,15 +458,15 @@ public class TextView {
         String playlistName = scanner.nextLine().trim();
         System.out.print("Enter song title to add: ");
         String songTitle = scanner.nextLine().trim();
-        Song song = library.searchSongByTitle(songTitle);
+        ArrayList<Song> song = library.searchSongByTitle(songTitle);
         if (song == null) {
             System.out.println("Song not found in library. Add it to library first.");
             return;
         }
         if (library.addSongToPlaylist(playlistName, song)) {
-            System.out.println("Song added to playlist '" + playlistName + "'.");
+            System.out.println("Song added to playlist.");
         } else {
-            System.out.println("Failed to add song. Check if the playlist exists.");
+            System.out.println("Failed to add song. Playlist might not exist or the song is already there.");
         }
     }
     
