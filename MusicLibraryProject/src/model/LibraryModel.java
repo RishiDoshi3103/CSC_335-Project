@@ -116,5 +116,85 @@ public class LibraryModel {
 		}
 		return false;
 	}
+	
+	public boolean createPlaylist(String name) {
+	    // Check if a playlist with this name already exists
+	    for (PlayList p : playlists) {
+	        if (p.getName().equalsIgnoreCase(name)) {
+	            return false; // Already exists
+	        }
+	    }
+	    PlayList newPlaylist = new PlayList(name);
+	    playlists.add(newPlaylist);
+	    return true;
+	}
 
+	public boolean removePlaylist(String name) {
+		for (PlayList p : playlists) {
+			if(p.getName().equalsIgnoreCase(name)) {
+				playlists.remove(p);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean addSongToPlaylist(String playlistName, Song s) {
+		PlayList targetPlaylist = findPlayListByTitle(playlistName);
+		if(targetPlaylist == null) {
+			return false;
+		}
+		
+		for(Song existing : targetPlaylist.getSongs()) {
+			if(existing.getTitle().equalsIgnoreCase(s.getTitle())){
+				return false; // Song is Already is in the Playlist
+			}
+		}
+		
+		//If the song is not found, then add the song
+		targetPlaylist.addSong(s);
+		return true;
+	}
+	
+	// Helper method to find a playlist by name
+	private PlayList findPlayListByTitle(String name) {
+		for(PlayList p : playlists) {
+			if(p.getName().equalsIgnoreCase(name)) {
+				return p;
+			}
+		}
+		return null; // Not Found
+	}
+	
+	public boolean removeSongFromPlaylist(String playlistName, String songTitle) {
+	    for (PlayList p : playlists) {
+	        if (p.getName().equalsIgnoreCase(playlistName)) {
+	            // find the Song object in p’s list
+	            for (Song track : p.getSongs()) {
+	                if (track.getTitle().equalsIgnoreCase(songTitle)) {
+	                    p.removeSong(track);
+	                    return true;
+	                }
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+	public PlayList searchPlaylistByName(String name) {
+	    for (PlayList p : playlists) {
+	        if (p.getName().equalsIgnoreCase(name)) {
+	            return p;
+	        }
+	    }
+	    return null; // Not found
+	}
+
+	public ArrayList<String> getPlaylists() {
+		ArrayList<String> playlistNames = new ArrayList<>();
+		for(PlayList p : playlists) {
+				playlistNames.add(p.getName());
+		}
+		return playlistNames;
+	}
 }
