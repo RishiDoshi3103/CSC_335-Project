@@ -100,6 +100,61 @@ public class MusicStore {
 		}
 	}
 	
+	public ArrayList<Song> searchSongsByTitle(String title) {
+		ArrayList<Song> list = new ArrayList<Song>();
+		for (Song song : this.inventory) {
+			if (song.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					song.getTitle().toLowerCase().contains(title.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<Song> searchSongsByArtist(String artist) {
+		ArrayList<Song> list = new ArrayList<Song>();
+		for (Song song : this.inventory) {
+			if (song.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					song.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<Album> searchAlbumsByTitle(String title) {
+		ArrayList<Album> list = new ArrayList<Album>();
+		for (Album album : this.album_stock) {
+			if(album.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					album.getTitle().toLowerCase().contains(title.toLowerCase())) {
+				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+				for (String song : album.getSongs()) {
+					target.addSong(song);
+				}
+				list.add(target);
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<Album> searchAlbumsByArtist(String artist) {
+		ArrayList<Album> list = new ArrayList<Album>();
+		for (Album album : this.album_stock) {
+			if(album.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					album.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+				for (String song : album.getSongs()) {
+					target.addSong(song);
+				}
+				list.add(target);
+			}
+		}
+		return list;
+	}
+	//-------------------------------------------
+	/**
 	public String searchSongsByTitle(String title) {
 		boolean found = false;
 		String output = "";
@@ -119,6 +174,7 @@ public class MusicStore {
 		}
 		
 	}
+	
 	
 	public String searchSongsByArtist(String artist) {
 		boolean found = false;
@@ -176,7 +232,7 @@ public class MusicStore {
 			return output;
 		}
 	}
-	
+	*/
 	public Song getSongByTitle(String title) {
 		for (Song song : this.inventory) {
 			if (song.getTitle().equals(title)) {

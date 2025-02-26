@@ -41,6 +41,38 @@ public class LibraryModel {
 	}
 	
 	
+	public boolean addSong(Song song) {
+		if (!checkForSongPresence(song)) {
+			Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+			this.library.add(target);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * This helper function checks if a song is present in the current user library.
+	 * It returns true if a copy is present, false if not.
+	 * 
+	 * @param target	Song class object to search for in library
+	 * @return true		Returns true if song with same title, album, and artist is 
+	 * 					 in library
+	 * 		   false    Returns false is song is not currently in library
+	 */
+	private boolean checkForSongPresence(Song target) {
+		for (Song song : this.library) {
+			if (song.getTitle().toLowerCase().equals(target.getTitle().toLowerCase())
+			  && song.getAlbum().toLowerCase().equals(target.getAlbum().toLowerCase())
+			  && song.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	/**
 	public Song getSongTitle(String title) {
 		for (Song song : this.library) {
 			if (song.getTitle().equals(title)) {
@@ -116,9 +148,7 @@ public class LibraryModel {
 	}
 	
 	public void addSong(Song song) {
-		// Need MusicStore song getter to add
-		//this.library.add(store.getSong(song.getTitle())); // By song title?
-		
+		Song 
 	}
 	
 	// Temporary, for testing purposes
@@ -169,5 +199,6 @@ public class LibraryModel {
 		}
 		return faves;
 	}
+	*/
 
 }
