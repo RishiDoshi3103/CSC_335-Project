@@ -197,4 +197,15 @@ public class LibraryModel {
 		}
 		return playlistNames;
 	}
+	
+	public ArrayList<Song> getFavorites() {
+		ArrayList<Song> faves = new ArrayList<Song>();
+		for (Song song : this.library) {
+			if (song.isFavorite()) {
+				Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				target.setRating(song.getRating());
+			}
+		}
+		return faves;
+	}
 }

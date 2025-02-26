@@ -38,13 +38,14 @@ public class TextView {
         while (true) {
             System.out.println("\n--- Rishi & Kyle's Music Library ---");
             System.out.println("- Store:");
-            System.out.println("    1. Search Store");
+            System.out.println("    1. Search Store\n");
             System.out.println("- Library:");
             System.out.println("    2. Songs");
             System.out.println("    3. Artists");
             System.out.println("    4. Albums");
             System.out.println("    5. Playlists");
-            System.out.println("6. Exit Music Player");
+            System.out.println("    6. Favorite Songs\n");
+            System.out.println("7. Exit Music Player\n");
             System.out.print("Enter Choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -66,6 +67,17 @@ public class TextView {
                     libraryPlaylistsMenu();
                     break;
                 case "6":
+                	ArrayList<Song> faves = library.getFavorites();
+                	if (faves.size() > 0) {
+                		for (Song song : faves) {
+                			System.out.println(song.toString());
+                		}
+                	}
+                	else {
+                		System.out.println("No Songs Rated 5, yet!");
+                	}
+                	break;
+                case "7":
                     System.out.println("--- Exiting ---");
                     scanner.close();
                     System.exit(0);
@@ -480,15 +492,19 @@ public class TextView {
         String playlistName = scanner.nextLine().trim();
         System.out.print("Enter song title to add: ");
         String songTitle = scanner.nextLine().trim();
-        ArrayList<Song> song = library.searchSongByTitle(songTitle);
-        if (song == null) {
+        ArrayList<Song> songs = library.searchSongByTitle(songTitle);
+        if (songs.size() == 0) {
             System.out.println("Song not found in library. Add it to library first.");
             return;
         }
-        if (library.addSongToPlaylist(playlistName, song)) {
-            System.out.println("Song added to playlist.");
-        } else {
-            System.out.println("Failed to add song. Playlist might not exist or the song is already there.");
+        for (Song song : songs) {
+        	if (library.addSongToPlaylist(playlistName, song)) {
+        		System.out.println("Song added to playlist: " + song.toString());
+        	}
+        	else {
+        		System.out.println("Failed to add song: " + song.toString());
+        		System.out.println("Playlist might not exist or the song is already there.");
+        	}
         }
     }
     
