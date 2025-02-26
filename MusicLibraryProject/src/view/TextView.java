@@ -316,9 +316,12 @@ public class TextView {
         String title = scanner.nextLine().trim();
         ArrayList<Song> found = library.searchSongByTitle(title);
         if (found.size() > 0) {
-           for (Song song : found) {
-        	   System.out.println();
-           }
+          int i = 1;
+	        for (Song song : found) {
+	        	System.out.println(Integer.toString(i) + ". " + song.toString());
+	        	i++;
+	        }
+
         } else {
             System.out.println("Song not found in library.");
         }
@@ -327,10 +330,14 @@ public class TextView {
     private static void rateSongInLibrary() {
         System.out.print("Enter song title to rate: ");
         String title = scanner.nextLine().trim();
-        Song song = library.searchSongByTitle(title);
-        if (song == null) {
+        ArrayList<Song> song = library.searchSongByTitle(title);
+        if (song.size() == 0) {
             System.out.println("Song not found in library.");
             return;
+        }
+        if (song.size() > 1) {
+        	System.out.println("Multiple Songs found with title: " + title);
+        	return;
         }
         System.out.print("Enter rating (1-5): ");
         String ratingStr = scanner.nextLine().trim();
@@ -340,8 +347,13 @@ public class TextView {
                 System.out.println("Rating must be between 1 and 5.");
                 return;
             }
-            song.setRating(Rating.fromInt(ratingVal));
-            System.out.println("Song updated: " + song);
+            if (library.setRating(song.get(0).getTitle(), Rating.fromInt(ratingVal))) {
+            	System.out.println("Song successfully rated " + Integer.toString(ratingVal) + ": " + song.get(0).toString());
+            }
+            else {
+            	System.out.println("Error during rating.");
+            	return;
+            }
         } catch (NumberFormatException e) {
             System.out.println("Invalid rating input.");
         }
@@ -350,13 +362,23 @@ public class TextView {
     private static void markSongAsFavorite() {
         System.out.print("Enter song title to mark as favorite: ");
         String title = scanner.nextLine().trim();
-        Song song = library.searchSongByTitle(title);
-        if (song == null) {
+        ArrayList<Song> songs = library.searchSongByTitle(title);
+        if (songs.size() == 0) {
             System.out.println("Song not found in library.");
             return;
         }
-        song.setRating(Rating.FIVE);  // If setting rating to FIVE automatically marks as favorite.
-        System.out.println("Song marked as favorite: " + song);
+        if (songs.size() > 1) {
+        	System.out.println("Multiple Songs found with title: " + title);
+        	return;
+        }
+        if (library.setRating(songs.get(0).getTitle(), Rating.FIVE)) {
+        	System.out.println("Song successfully marked as favorite: " + songs.get(0).toString());
+        }
+        else {
+        	System.out.println("Error during marking.");
+        	return;
+        }
+        
     }
     
     // ---- Library > Artists Submenu ----
