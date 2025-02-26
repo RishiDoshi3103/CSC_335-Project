@@ -41,9 +41,8 @@ public enum Rating {
 			if(r.getValue() == value) {
 				return r;
 			}
-			throw new IllegalArgumentException("Invalid Rating Value: " + value);
 		}
-		return null;
+		throw new IllegalArgumentException("Invalid Rating Value: " + value);
 	}
 	
 	@Override

@@ -30,4 +30,9 @@ class MusicStoreTest {
 		ArrayList<Song> list3 = store.searchSongsByTitle("The");
 		assertEquals(list3.size(), 21);
 	}
+	
+	@Test
+	void testSearchSongsByArtist() {
+		
+	}
 }
