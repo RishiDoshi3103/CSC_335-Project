@@ -15,8 +15,8 @@ public class Album {
 	private String genre;
 	private String year;
 	private List<String> songs;		// List of song titles
-	private Rating rating;
-	private boolean favorite;
+	//private Rating rating;
+	//private boolean favorite;
 	
   /**
    * Constructs a new Album with the given details.
@@ -33,8 +33,6 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
-		this.rating = Rating.NOT_RATED;
-		this.favorite = false;
 		
 		// Order for the Songs and the Artist are maintain hear.
 		this.songs = new ArrayList<>();
@@ -70,6 +68,7 @@ public class Album {
 		return songs;
 	}
 	
+	/** No album favorite functionality necessary ** 
 	public Rating getRating() {
 		return rating;
 	}
@@ -88,9 +87,10 @@ public class Album {
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
+	*/
 	
 	@Override
 	public String toString () {
-		return title + " by " + artist + " (" + year + ") - " + genre + "\nRating: "+ rating + (favorite ? "[Favorite]" : "") +"\nSongs:" + songs;
+		return title + " by " + artist + " (" + year + ") - " + genre + "\nSongs:" + songs;
 	}
 }

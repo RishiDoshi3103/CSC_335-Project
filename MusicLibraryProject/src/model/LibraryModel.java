@@ -67,6 +67,36 @@ public class LibraryModel {
 		return result;
 	}
 	
+	public boolean setRating( String title, Rating rate) {
+		for (Song song : this.library) {
+			if (song.getTitle().equals(title)) {
+				song.setRating(rate);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getArtists() {
+		ArrayList<String> list = new ArrayList<String>();
+		for (Song song : this.library) {
+			if (!list.contains(song.getArtist())) {
+				list.add(song.getArtist());
+			}
+		}
+		return list;
+	}
+	
+	public ArrayList<Album> getAllAlbumsInLibrary() {
+		ArrayList<Album> list = new ArrayList<Album>();
+		for (Album album : this.albums) {
+			Album addition = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+			for (String song : album.getSongs()) {
+				addition.addSong(song);
+			}
+		}
+		return list;
+	}
 	/**
 	 * This helper function checks if a song is present in the current user library.
 	 * It returns true if a copy is present, false if not.
