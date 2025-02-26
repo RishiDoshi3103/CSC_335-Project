@@ -10,13 +10,12 @@ import model.Album;
 
 public class TextView {
 	private static MusicStore store = new MusicStore();
-	private static LibraryModel library = new LibraryModel(store);
+	private static LibraryModel library = new LibraryModel();
 	
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
-		boolean exit = false;
 		
-		while(!exit) {
+		while(true) {
 			System.out.println("\n--- Rishi & Kyle's Music Library ---");
 			System.out.println("1. Search Store");
 			System.out.println("2. Access Library");
@@ -34,7 +33,6 @@ public class TextView {
 					break;
 				case "3":
 					System.out.println("--- Exiting ---");
-					exit = true; // Needed? Needs review.
 					scanner.close();
 					System.exit(0);
 					break;
@@ -42,7 +40,6 @@ public class TextView {
 					System.out.println("Invalid choice. Please enter number associated with desired selection.");
 			}
 		}
-		scanner.close();
 	}
 	
 	private static void searchStore(Scanner scanner) {
@@ -83,13 +80,13 @@ public class TextView {
 							break;
 						}
 						
+						// when selecting songs here, loop until exit
 						try {
 							int songIndex = Integer.parseInt(pick);
 							if (songIndex >= 0 && songIndex < title_list.size()) {
 								Song selectedSong = title_list.get(songIndex);
 								if (library.addSong(selectedSong)) {
 									System.out.println("Song successfully added: " + selectedSong.toString());
-									validPick = true;
 								}
 								else {
 									System.out.println("Song already in library");
@@ -133,7 +130,6 @@ public class TextView {
 								Song selectedSong = artist_list.get(songIndex);
 								if (library.addSong(selectedSong)) {
 									System.out.println("Song successfully added: " + selectedSong.toString());
-									validPick = true;
 								}
 								else {
 									System.out.println("Song already in library");
@@ -186,7 +182,6 @@ public class TextView {
 								}
 								if (added > 0) {
 									System.out.println(Integer.toString(added) + " Songs successfully added from: " + selectedAlbum.getTitle());
-									validPick = true;
 								}
 								else {
 									System.out.println("All Album Songs already in library");
@@ -239,7 +234,6 @@ public class TextView {
 								}
 								if (added > 0) {
 									System.out.println(Integer.toString(added) + " Songs successfully added from: " + selectedAlbum.getTitle());
-									validPick = true;
 								}
 								else {
 									System.out.println("All Album Songs already in library");

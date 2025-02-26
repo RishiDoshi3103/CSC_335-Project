@@ -26,17 +26,13 @@ import java.util.ArrayList;
 import database.MusicStore;
 
 public class LibraryModel {
-	private MusicStore store;
 	private ArrayList<Song> library;
 	private ArrayList<Album> albums;
 	private ArrayList<PlayList> playlists;
 	
-	public LibraryModel(MusicStore database) {
-		this.store = database;
+	public LibraryModel() {
 		this.library = new ArrayList<Song>();
-		this.playlists = new ArrayList<PlayList>();
-		// This for the tempAddAlbum()
-		// By Adding this want call the NullPointerException 
+		this.playlists = new ArrayList<PlayList>(); 
 		this.albums = new ArrayList<Album>();
 	}
 	
