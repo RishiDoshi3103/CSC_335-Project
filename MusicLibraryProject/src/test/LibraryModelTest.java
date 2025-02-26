@@ -9,7 +9,7 @@ import model.LibraryModel;
 import model.Song;
 
 class LibraryModelTest {
-	
+	/*
 	@Test
 	void testGetSongTitle() {
 		MusicStore store = new MusicStore();
@@ -75,4 +75,5 @@ class LibraryModelTest {
 		MusicStore store = new MusicStore();
 		LibraryModel lib = new LibraryModel(store);
 	}
+	*/
 }

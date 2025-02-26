@@ -100,128 +100,58 @@ public class MusicStore {
 		}
 	}
 	
-	public String searchSongsByTitle(String title) {
-		boolean found = false;
-		String output = "";
+	public ArrayList<Song> searchSongsByTitle(String title) {
+		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
-			if (song.getTitle().equals(title)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
+			if (song.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					song.getTitle().toLowerCase().contains(title.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
 			}
 		}
-		if (!found) {
-			//System.out.println("0 results for songs with title: " + title + ".");
-			return "0 results for songs with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-		
+		return list;
 	}
 	
-	public String searchSongsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
+	public ArrayList<Song> searchSongsByArtist(String artist) {
+		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
-			if (song.getArtist().equals(artist)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
+			if (song.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					song.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
 			}
 		}
-		if (!found) {
-			//System.out.println("0 results for songs with artist: " + artist + ".");
-			return "0 results for songs with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
+		return list;
 	}
 	
-	public String searchAlbumsByTitle(String title) {
-		boolean found = false;
-		String output = "";
+	public ArrayList<Album> searchAlbumsByTitle(String title) {
+		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.album_stock) {
-			if (album.getTitle().equals(title)) {
-				output += album.toString() + "\n";
-				//System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with title: " + title + ".");
-			return "0 results for albums with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public String searchAlbumsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
-		for (Album album : this.album_stock) {
-			if (album.getArtist().equals(artist)) {
-				output += album.toString() + "\n";
-				System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with artist: " + artist + ".");
-			return "0 results for albums with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public Song getSongByTitle(String title) {
-		for (Song song : this.inventory) {
-			if (song.getTitle().equals(title)) {
-				Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-				return target;
-			}
-		}
-		return null;
-	}
-	
-	public ArrayList<Song> getSongsByArtist(String artist) {
-		ArrayList<Song> target = new ArrayList<Song>();
-		for (Song song : this.inventory) {
-			if (song.getArtist().equals(artist)) {
-				Song add_song = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-				target.add(add_song);
-			}
-		}
-		return target;
-	}
-	
-	public Album getAlbumByTitle(String title) {
-		for (Album album : this.album_stock) {
-			if (album.getTitle().equals(title)) {
+			if(album.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					album.getTitle().toLowerCase().contains(title.toLowerCase())) {
 				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 				for (String song : album.getSongs()) {
 					target.addSong(song);
 				}
-				return target;
+				list.add(target);
 			}
 		}
-		return null;
+		return list;
 	}
 	
-	public ArrayList<Album> getAlbumsByArtist(String artist) {
-		ArrayList<Album> target = new ArrayList<Album>();
+	public ArrayList<Album> searchAlbumsByArtist(String artist) {
+		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.album_stock) {
-			if (album.getArtist().equals(artist)) {
-				Album add_album = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+			if(album.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					album.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 				for (String song : album.getSongs()) {
-					add_album.addSong(song);
+					target.addSong(song);
 				}
+				list.add(target);
 			}
 		}
-		return target;
+		return list;
 	}
 	
 	public ArrayList<String> getFileNames() {
@@ -276,12 +206,5 @@ public class MusicStore {
 	}
 	
 	
-	public ArrayList<Album> getAlbumsForTest() {
-		return this.album_stock;
-	}
-	
-	public ArrayList<Song> getSongsForTest() {
-		return this.inventory;
-	}
 
 }

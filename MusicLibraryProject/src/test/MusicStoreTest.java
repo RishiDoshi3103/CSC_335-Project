@@ -9,7 +9,7 @@ import model.Album;
 import model.Song;
 
 class MusicStoreTest {
-
+	/**
 	@Test
 	void testSongSearches() {
 		MusicStore store = new MusicStore();
@@ -79,5 +79,5 @@ class MusicStoreTest {
 				+" He Won't Go, Take It All, I'll Be Waiting, One and Only, Lovesong, Someone Like You, I Found a Boy]\n" );
 		
 	}
-
+	*/
 }

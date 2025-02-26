@@ -300,13 +300,13 @@ public class TextView {
     }
     
     private static void listAllSongs() {
-        ArrayList<String> titles = library.getSongTitles();
-        if (titles.isEmpty()) {
+        ArrayList<Song> list = library.getAllSongs();
+        if (list.isEmpty()) {
             System.out.println("No songs in your library.");
         } else {
             System.out.println("\n--- Songs in Your Library ---");
-            for (String title : titles) {
-                System.out.println(" - " + title);
+            for (Song song : list) {
+                System.out.println(" - " + song.toString());
             }
         }
     }
@@ -314,9 +314,11 @@ public class TextView {
     private static void searchSongInLibrary() {
         System.out.print("Enter song title to search in library: ");
         String title = scanner.nextLine().trim();
-        Song found = library.searchSongByTitle(title);
-        if (found != null) {
-            System.out.println("Song found: " + found);
+        ArrayList<Song> found = library.searchSongByTitle(title);
+        if (found.size() > 0) {
+           for (Song song : found) {
+        	   System.out.println()
+           }
         } else {
             System.out.println("Song not found in library.");
         }

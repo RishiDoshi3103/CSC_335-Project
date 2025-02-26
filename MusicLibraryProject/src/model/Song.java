@@ -56,6 +56,7 @@ public class Song {
 	
   public boolean isFavorite() {
 		return favorite;
+  	}
   
 	@Override
 	public String toString() {
