@@ -1,13 +1,10 @@
 /*
- *  This program is intended to represent individual songs present
- *  in the database. Each song contains a title, album, and artist
- *  associated with it.
+ *  File: Song.java
+ *  Authors: Kyle Becker / Rishi Doshi
  *  
- *  Per LA1 specs:
- *  - the ratings are 1 to 5
- *	- songs do not have to be rated so there is no default rating
- *	- songs that are rated as 5 should automatically be set to “favorite”
- * 
+ *  Purpose: This program is intended to represent individual songs 
+ *  present in the database. Each song contains a title, album, and 
+ *  artist associated with it.
  */
 
 package model;
@@ -22,6 +19,7 @@ public class Song {
 		this.album = album;
 		this.artist = artist;
 	}
+	
 	
 	public String getTitle() {
 		return this.title;

@@ -29,8 +29,6 @@
  *   loadAlbum.
  */
 
-
-
 package database;
 
 import java.io.File;
@@ -55,6 +53,7 @@ public class MusicStore {
 		
 		Path path = Paths.get("resources");
 		File catalogue = new File(path.toAbsolutePath().toString());
+		
 		
 		File[] file_list = catalogue.listFiles();
 		this.files = file_list;

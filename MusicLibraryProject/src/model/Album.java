@@ -1,25 +1,29 @@
+/*
+ * File: Album.java
+ * Authors: Rishi Doshi / Kyle Becker
+ * 
+ * Purpose: The purpose of this file is to represent an album that 
+ * contains data for the album name, the artist, genre, and year.
+ * It also holds a string list representation of the songs that
+ * are associated with that album, originally loaded in the MusicStore.
+ */
+
 package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The Album class represents a music album.
- * It stores album metadata (title, artist, genre, year), an ordered list of song titles,
- * an overall album rating, and a favorite flag.
- */
 
 public class Album {
 	private String title;
 	private String artist;
 	private String genre;
 	private String year;
-	private List<String> songs;		// List of song titles
+	private List<String> songs;	// List of song titles
 	
 	
   /**
    * Constructs a new Album with the given details.
-   * The album's initial rating is set to NOT_RATED and it is not marked as favorite.
    *
    * @param title  the album title
    * @param artist the album artist
@@ -37,12 +41,11 @@ public class Album {
 		this.songs = new ArrayList<>();
 	}
 	
-	/**
-     * Adds a song to the album while preserving the order.
-     *
-     * @param song the song title to add.
-     */
-	
+   /**
+    * Adds a song to the album while preserving the order.
+    *
+    * @param song the song title to add.
+    */
 	public void addSong(String song) {
 		songs.add(song);
 	}

@@ -1,12 +1,19 @@
+
+/**
+ * File: PlayList.java
+ * Authors: Rishi Doshi / Kyle Becker
+ * 
+ * Purpose: The PlayList class represents a user-defined playlist.
+ * It stores a name, an ordered list of Song objects, an overall 
+ * playlist rating, and a favorite flag.
+ */
+
+
 package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The PlayList class represents a user-defined playlist.
- * It stores a name, an ordered list of Song objects, an overall playlist rating, and a favorite flag.
- */
 
 public class PlayList {
 	private String name;

@@ -1,3 +1,20 @@
+/**
+ * File: TextView.java
+ * Authors: Kyle Becker / Rishi Doshi / AI
+ * 
+ * This class implements the text-based user interface (View) for the Music Library Project.
+ * It interacts only via public methods of the MusicStore and LibraryModel, thereby maintaining encapsulation.
+ * 
+ * Functionalities include:
+ * - Searching the Music Store for songs (by title or artist) and albums (by title or artist) and adding them to the library.
+ * - Accessing the user library to list/search songs, list artists, albums, and playlists.
+ * - Managing playlists (creating, removing, adding/removing songs).
+ * - Rating songs and marking songs as favorite.
+ * 
+ * AI (chatgpt) was used to augment this file (and this file only), to assist with user friendly
+ * interaction and functionality.
+ */
+
 package view;
 
 import java.util.ArrayList;
@@ -10,24 +27,9 @@ import model.PlayList;
 import model.Rating;
 import model.Song;
 
-/**
- * TextView.java
- * 
- * This class implements the text-based user interface (View) for the Music Library Project.
- * It interacts only via public methods of the MusicStore and LibraryModel, thereby maintaining encapsulation.
- * 
- * Functionalities include:
- * - Searching the Music Store for songs (by title or artist) and albums (by title or artist) and adding them to the library.
- * - Accessing the user library to list/search songs, list artists, albums, and playlists.
- * - Managing playlists (creating, removing, adding/removing songs).
- * - Rating songs and marking songs as favorite.
- * 
- * AI-assisted code was used to structure the UI into small, testable pieces.
- */
-
 public class TextView {
-	// Static references for simplicity
-    private static MusicStore store = new MusicStore();
+
+	private static MusicStore store = new MusicStore();
     private static LibraryModel library = new LibraryModel();
     private static Scanner scanner = new Scanner(System.in);
     
