@@ -15,9 +15,8 @@ class SongTest {
 		assertEquals(song1.getTitle(), "test_title");
 		assertEquals(song1.getAlbum(), "test_album");
 		assertEquals(song1.getArtist(), "test_artist");
-		
-		song1.setRating(Rating.ONE);
-		assertEquals(song1.getRating(), Rating.ONE);
+
+		assertEquals(song1.toString(), "test_title by test_artist | Album: test_album");
 	}
 
 }

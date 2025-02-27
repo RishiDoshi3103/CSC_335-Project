@@ -1,6 +1,6 @@
 /*
  * File: MusicStore.java
- * Author: Kyle Becker
+ * Authors: Kyle Becker / Rishi Doshi
  * 
  * Purpose: This file is meant to replicate a working inventory for songs
  * and albums based on appropriately formatted .txt files, representing
@@ -14,37 +14,20 @@
  * with appropriately indicated songs and albums. If an album data is referenced
  * in albums.txt, but does not have an associated .txt file, the constructor will 
  * ignore it and move on to the next.
- * - searchSongsByTitle( String ): Prints to console all songs with titles
- * that match the parameter string.
- * - searchSongsByArtist( String ): Prints to console all songs by artists
- * that match the parameter string.
- * - searchAlbumsByTitle( String ): Prints to console all albums with titles
- * that match the parameter string.
- * - searchAlbumsByArtist( String ): Prints to console all albums by artists
- * that match the parameter string.
- * 
- * - getSongByTitle( String ): Returns the first found song whose title matches
- * the parameter string. Otherwise, returns null.
- * - getSongsByArtist( String ): Returns an ArrayList object containing songs whose
- * artists match the parameter string. Otherwise, returns an empty ArrayList.
- * - getAlbumByTitle( String ): Returns the first found album whose title matches
- * the parameter string. Otherwise, returns null.
- * - getAlbumsByArtist( String ): Returns an ArrayList object containing albums
- * whose artists match the parameter string. Otherwise, returns an empty ArrayList.
- * 
- * - loadAlbums( String, String ): Helper function that accepts each individual line
- * in the albums.txt file, where the first string parameter represents the tokenized
- * album title and the second represents album artist, and searches the other .txt
- * files for albums matching the associated data. If found, it adds the albums data
- * to the variable list album_stock - representing available albums.
- * - loadSongs(): Helper function called after the album_stock variable has been 
- * fully allocated. It reads in each song attached to each album found in the album_stock
- * variable, and creates an appropriately representative Song class for each one in the 
- * inventory variable.
- * 
+ * - searchSongsByTitle(String title): Returns a list of songs whose titles match 
+ * 	 the input string.
+ * - searchSongsByArtist(String artist): Returns a list of songs whose artists match
+ *   the input string. 
+ * - searchAlbumsByTitle(String title): Returns a list of albums whose titles match
+ *   the input string.
+ * - searchAlbumsByArtist(String artist): Returns a list of albums whose titles match
+ *   the input string.
+ *   
+ * - loadAlbum(String title, String artist): Helper function that loads albums files 
+ *   that match the configuration album.txt file contents.
+ * - loadSongs(): Helper function that loads songs from all the loaded albums via 
+ *   loadAlbum.
  */
-
-
 
 package database;
 
@@ -70,6 +53,7 @@ public class MusicStore {
 		
 		Path path = Paths.get("resources");
 		File catalogue = new File(path.toAbsolutePath().toString());
+		
 		
 		File[] file_list = catalogue.listFiles();
 		this.files = file_list;
@@ -100,139 +84,97 @@ public class MusicStore {
 		}
 	}
 	
-	public String searchSongsByTitle(String title) {
-		boolean found = false;
-		String output = "";
+	/**
+	 * This function creates a deep copy list of songs with titles that match
+	 * the input parameter, based on ones currently in the inventory.
+	 * 
+	 * @param  title	String representation of a song title
+	 * @return list		ArrayList of songs with titles that match the input
+	 */
+	public ArrayList<Song> searchSongsByTitle(String title) {
+		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
-			if (song.getTitle().equals(title)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
+			if (song.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					song.getTitle().toLowerCase().contains(title.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
 			}
 		}
-		if (!found) {
-			//System.out.println("0 results for songs with title: " + title + ".");
-			return "0 results for songs with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-		
+		return list;
 	}
 	
-	public String searchSongsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
+	/**
+	 * This function creates a deep copy list of songs with artists that match
+	 * the input parameter, based on ones currently in the inventory.
+	 * @param  artist	String representation of an artist
+	 * @return list		ArrayList of songs with artists that match the input
+	 */
+	public ArrayList<Song> searchSongsByArtist(String artist) {
+		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
-			if (song.getArtist().equals(artist)) {
-				output += song.toString() + "\n";
-				//System.out.println(song.toString());
-				found = true;
+			if (song.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					song.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Song jingle = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+				list.add(jingle);
 			}
 		}
-		if (!found) {
-			//System.out.println("0 results for songs with artist: " + artist + ".");
-			return "0 results for songs with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
+		return list;
 	}
 	
-	public String searchAlbumsByTitle(String title) {
-		boolean found = false;
-		String output = "";
+	/**
+	 * This function creates a deep copy list of albums with titles that match 
+	 * the input parameter, based on ones currently in the album stock.
+	 * 
+	 * @param  title	String representation of an album title
+	 * @return list	    ArrayList of albums with titles that match the input
+	 */
+	public ArrayList<Album> searchAlbumsByTitle(String title) {
+		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.album_stock) {
-			if (album.getTitle().equals(title)) {
-				output += album.toString() + "\n";
-				//System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with title: " + title + ".");
-			return "0 results for albums with title: " + title + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public String searchAlbumsByArtist(String artist) {
-		boolean found = false;
-		String output = "";
-		for (Album album : this.album_stock) {
-			if (album.getArtist().equals(artist)) {
-				output += album.toString() + "\n";
-				System.out.println(album.toString());
-				found = true;
-			}
-		}
-		if (!found) {
-			//System.out.println("0 results for albums with artist: " + artist + ".");
-			return "0 results for albums with artist: " + artist + ".\n";
-		}
-		else {
-			return output;
-		}
-	}
-	
-	public Song getSongByTitle(String title) {
-		for (Song song : this.inventory) {
-			if (song.getTitle().equals(title)) {
-				Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-				return target;
-			}
-		}
-		return null;
-	}
-	
-	public ArrayList<Song> getSongsByArtist(String artist) {
-		ArrayList<Song> target = new ArrayList<Song>();
-		for (Song song : this.inventory) {
-			if (song.getArtist().equals(artist)) {
-				Song add_song = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-				target.add(add_song);
-			}
-		}
-		return target;
-	}
-	
-	public Album getAlbumByTitle(String title) {
-		for (Album album : this.album_stock) {
-			if (album.getTitle().equals(title)) {
+			if(album.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+					album.getTitle().toLowerCase().contains(title.toLowerCase())) {
 				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 				for (String song : album.getSongs()) {
 					target.addSong(song);
 				}
-				return target;
+				list.add(target);
 			}
 		}
-		return null;
+		return list;
 	}
 	
-	public ArrayList<Album> getAlbumsByArtist(String artist) {
-		ArrayList<Album> target = new ArrayList<Album>();
+	/**
+	 * This function creates a deep copy list of albums with artists that match
+	 * the input parameter, based on ones currently in the album stock. 
+	 * 
+	 * @param  artist	String representation of an album artist
+	 * @return list		ArrayList of albums with artists that match the input
+	 */
+	public ArrayList<Album> searchAlbumsByArtist(String artist) {
+		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.album_stock) {
-			if (album.getArtist().equals(artist)) {
-				Album add_album = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+			if(album.getArtist().toLowerCase().equals(artist.toLowerCase()) ||
+					album.getArtist().toLowerCase().contains(artist.toLowerCase())) {
+				Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 				for (String song : album.getSongs()) {
-					add_album.addSong(song);
+					target.addSong(song);
 				}
+				list.add(target);
 			}
 		}
-		return target;
-	}
-	
-	public ArrayList<String> getFileNames() {
-		ArrayList<String> output = new ArrayList<String>();
-		for (File file : this.files) {
-			output.add(file.getName());
-		}
-		return output;
+		return list;
 	}
 	
 	
+	/**
+	 * This helper function takes in a title and artist for each line in the album.txt
+	 * file, and searches the other files in the resources directory with a matching 
+	 * title / artist. If found, it converts the inner data into an equivalent Album
+	 * class object and saves it into the internal album_stock variable.
+	 * 
+	 * @param title		String representing album title (from album.txt)
+	 * @param artist	String representing album artist (from album.txt)
+	 */
 	private void loadAlbum(String title, String artist) {
 		for (File file : this.files) {
 			try {
@@ -266,6 +208,11 @@ public class MusicStore {
 		}
 	}
 	
+	/**
+	 * This helper function is meant to run after all the albums have been parsed, identified,
+	 * and loaded into album_stock - then uses the data to create all the individual songs'
+	 * equivalent Song classes, storing them into the inventory variable.
+	 */
 	private void loadSongs() {
 		for (Album album : this.album_stock) {
 			for (String song : album.getSongs()) {
@@ -273,15 +220,6 @@ public class MusicStore {
 				this.inventory.add(add_song);
 			}
 		}
-	}
-	
-	
-	public ArrayList<Album> getAlbumsForTest() {
-		return this.album_stock;
-	}
-	
-	public ArrayList<Song> getSongsForTest() {
-		return this.inventory;
 	}
 
 }

@@ -23,8 +23,6 @@ class PlayListTest {
 	        assertEquals("My Playlist", playlist.getName());
 	        assertNotNull(playlist.getSongs(), "Songs list should not be null.");
 	        assertTrue(playlist.getSongs().isEmpty(), "Songs list should be empty initially.");
-	        assertEquals(Rating.NOT_RATED, playlist.getRating(), "Default rating should be NOT_RATED.");
-	        assertFalse(playlist.isFavorite(), "Playlist should not be favorite by default.");
 	    }
 
 	    @Test
@@ -52,42 +50,15 @@ class PlayListTest {
 	        assertFalse(playlist.getSongs().contains(song1));
 	    }
 
-	    @Test
-	    void testSetRating() {
-	        playlist.setRating(Rating.FOUR);
-	        assertEquals(Rating.FOUR, playlist.getRating());
-	        assertFalse(playlist.isFavorite(), "Should not be favorite if rating is not FIVE.");
-
-	        playlist.setRating(Rating.FIVE);
-	        assertEquals(Rating.FIVE, playlist.getRating());
-	        assertTrue(playlist.isFavorite(), "Should be favorite when rating is FIVE.");
-	    }
-
-	    @Test
-	    void testSetFavorite() {
-	        playlist.setFavorite(true);
-	        assertTrue(playlist.isFavorite());
-	        playlist.setFavorite(false);
-	        assertFalse(playlist.isFavorite());
-	    }
 
 	    @Test
 	    void testToString() {
 	        Song song = new Song("TitleA", "AlbumA", "ArtistA");
 	        playlist.addSong(song);
-	        playlist.setRating(Rating.THREE);
 
 	        String output = playlist.toString();
 	        assertTrue(output.contains("My Playlist"), "toString should include playlist name.");
-	        assertTrue(output.contains("3"), "toString should include rating if not NOT_RATED.");
 	        assertTrue(output.contains("TitleA"), "toString should include added songs.");
-	    }
-
-	    @Test
-	    void testSetRatingNull() {
-	        assertThrows(IllegalArgumentException.class, () -> {
-	            playlist.setRating(null);
-	        }, "Should throw IllegalArgumentException when rating is null.");
 	    }
 
 }

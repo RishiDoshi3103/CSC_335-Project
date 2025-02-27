@@ -1,26 +1,29 @@
+/*
+ * File: Album.java
+ * Authors: Rishi Doshi / Kyle Becker
+ * 
+ * Purpose: The purpose of this file is to represent an album that 
+ * contains data for the album name, the artist, genre, and year.
+ * It also holds a string list representation of the songs that
+ * are associated with that album, originally loaded in the MusicStore.
+ */
+
 package model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The Album class represents a music album.
- * It stores album metadata (title, artist, genre, year), an ordered list of song titles,
- * an overall album rating, and a favorite flag.
- */
 
 public class Album {
 	private String title;
 	private String artist;
 	private String genre;
 	private String year;
-	private List<String> songs;		// List of song titles
-	private Rating rating;
-	private boolean favorite;
+	private List<String> songs;	// List of song titles
+	
 	
   /**
    * Constructs a new Album with the given details.
-   * The album's initial rating is set to NOT_RATED and it is not marked as favorite.
    *
    * @param title  the album title
    * @param artist the album artist
@@ -33,19 +36,16 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
-		this.rating = Rating.NOT_RATED;
-		this.favorite = false;
 		
 		// Order for the Songs and the Artist are maintain hear.
 		this.songs = new ArrayList<>();
 	}
 	
-	/**
-     * Adds a song to the album while preserving the order.
-     *
-     * @param song the song title to add.
-     */
-	
+   /**
+    * Adds a song to the album while preserving the order.
+    *
+    * @param song the song title to add.
+    */
 	public void addSong(String song) {
 		songs.add(song);
 	}
@@ -70,27 +70,9 @@ public class Album {
 		return songs;
 	}
 	
-	public Rating getRating() {
-		return rating;
-	}
-	
-	public void setRating(Rating rating) {
-		if(rating == null) {
-			throw new IllegalArgumentException("Rating Cannot Be Null.");
-		}
-		this.rating = rating;
-	}
-	
-	public boolean isFavortite() {
-		return favorite;
-	}
-	
-	public void setFavorite(boolean favorite) {
-		this.favorite = favorite;
-	}
 	
 	@Override
 	public String toString () {
-		return title + " by " + artist + " (" + year + ") - " + genre + "\nRating: "+ rating + (favorite ? "[Favorite]" : "") +"\nSongs:" + songs;
+		return title + " by " + artist + " (" + year + ") - " + genre + "\nSongs:" + songs;
 	}
 }
