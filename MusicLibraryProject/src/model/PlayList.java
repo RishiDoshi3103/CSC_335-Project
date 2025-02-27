@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * The PlayList class represents a user-defined playlist.
- * It stores a name, an ordered list of Song objects, an overall playlist rating, and a favorite flag.
+ * It stores a name, an ordered list of Song objects, and a rating.
+ * If the rating is set to FIVE, the playlist is automatically marked as favorite.
  */
-
 public class PlayList {
 	private String name;
 	private List<Song> songs;
@@ -86,6 +86,10 @@ public class PlayList {
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
+	
+	/**
+     * Returns a formatted string representing the playlist and its songs in order.
+     */
 	
 	@Override
 	public String toString() {

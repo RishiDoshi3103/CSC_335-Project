@@ -91,6 +91,10 @@ public class TextView {
     // ========================
     // STORE MENU FUNCTIONS
     // ========================
+    
+    /**
+     * Displays the store submenu, allowing search by song or album.
+     */
     private static void searchStore() {
         boolean storeRunning = true;
         while (storeRunning) {
@@ -125,6 +129,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Prompts the user to search for a song by title in the store.
+     */
+    
     private static void storeSearchSongByTitle() {
         System.out.print("Enter Song title: ");
         String title = scanner.nextLine().trim();
@@ -136,6 +144,10 @@ public class TextView {
         printSongList(results);
         promptAddSongToLibrary(results);
     }
+    
+    /**
+     * Prompts the user to search for a song by artist in the store.
+     */
     
     private static void storeSearchSongByArtist() {
         System.out.print("Enter Song artist: ");
@@ -149,6 +161,10 @@ public class TextView {
         promptAddSongToLibrary(results);
     }
     
+    /**
+     * Prompts the user to search for an album by title in the store.
+     */
+    
     private static void storeSearchAlbumByTitle() {
         System.out.print("Enter Album title: ");
         String title = scanner.nextLine().trim();
@@ -160,6 +176,10 @@ public class TextView {
         printAlbumList(results);
         promptAddAlbumToLibrary(results);
     }
+    
+    /**
+     * Prompts the user to search for an album by artist in the store.
+     */
     
     private static void storeSearchAlbumByArtist() {
         System.out.print("Enter Album artist: ");
@@ -186,6 +206,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Prompts the user to add a selected song (by index) from search results to the library.
+     */
+    
     private static void promptAddSongToLibrary(ArrayList<Song> songs) {
         while (true) {
             System.out.println("\nAdd Song to library? Enter index, or type 'exit' to return:");
@@ -210,6 +234,10 @@ public class TextView {
             }
         }
     }
+    
+    /**
+     * Prompts the user to add all songs from a selected album to the library.
+     */
     
     private static void promptAddAlbumToLibrary(ArrayList<Album> albums) {
         while (true) {
@@ -242,6 +270,10 @@ public class TextView {
     // ========================
     // LIBRARY MENU FUNCTIONS
     // ========================
+    
+    /**
+     * Submenu for library songs: listing, searching, rating, and marking favorite.
+     */
     private static void libraryMenu() {
         boolean libRunning = true;
         while (libRunning) {
@@ -311,6 +343,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Lists all songs in the library.
+     */
+    
     private static void listAllSongs() {
         ArrayList<Song> list = library.getAllSongs();
         if (list.isEmpty()) {
@@ -322,6 +358,10 @@ public class TextView {
             }
         }
     }
+    
+    /**
+     * Searches the library for songs by title and prints the results.
+     */
     
     private static void searchSongInLibrary() {
         System.out.print("Enter song title to search in library: ");
@@ -338,6 +378,10 @@ public class TextView {
             System.out.println("Song not found in library.");
         }
     }
+    
+    /**
+     * Prompts the user for a song title and rating, then updates the rating in the library.
+     */
     
     private static void rateSongInLibrary() {
         System.out.print("Enter song title to rate: ");
@@ -371,6 +415,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Marks a song as favorite by setting its rating to FIVE.
+     */
+    
     private static void markSongAsFavorite() {
         System.out.print("Enter song title to mark as favorite: ");
         String title = scanner.nextLine().trim();
@@ -393,7 +441,13 @@ public class TextView {
         
     }
     
-    // ---- Library > Artists Submenu ----
+    // ========================
+    // LIBRARY > ARTISTS SUBMENU
+    // ========================
+    
+    /**
+     * Lists all distinct artists in the library.
+     */
     private static void libraryArtistsMenu() {
         ArrayList<String> artists = library.getArtists();
         if (artists.isEmpty()) {
@@ -408,7 +462,13 @@ public class TextView {
         scanner.nextLine();
     }
     
-    // ---- Library > Albums Submenu ----
+    // ========================
+    // LIBRARY > ALBUMS SUBMENU
+    // ========================
+    
+    /**
+     * Lists all albums in the library with album details.
+     */
     private static void libraryAlbumsMenu() {
         ArrayList<Album> albums = library.getAllAlbumsInLibrary();
         if (albums.isEmpty()) {
@@ -424,7 +484,14 @@ public class TextView {
         scanner.nextLine();
     }
     
-    // ---- Library > Playlists Submenu ----
+    // ========================
+    // LIBRARY > PLAYLISTS SUBMENU
+    // ========================
+    
+    /**
+     * Submenu for playlist management: create, remove, add song, remove song,
+     * view a playlist, and list all playlists.
+     */
     private static void libraryPlaylistsMenu() {
         boolean running = true;
         while (running) {
@@ -467,6 +534,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Prompts the user to create a new playlist.
+     */
+    
     private static void createPlaylist() {
         System.out.print("Enter new playlist name: ");
         String name = scanner.nextLine().trim();
@@ -477,6 +548,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Prompts the user to remove a playlist.
+     */
+    
     private static void removePlaylist() {
         System.out.print("Enter playlist name to remove: ");
         String name = scanner.nextLine().trim();
@@ -486,6 +561,10 @@ public class TextView {
             System.out.println("Playlist not found or could not be removed.");
         }
     }
+    
+    /**
+     * Prompts the user for a playlist name and song title, then adds matching songs to the playlist.
+     */
     
     private static void addSongToPlaylist() {
         System.out.print("Enter playlist name: ");
@@ -508,6 +587,10 @@ public class TextView {
         }
     }
     
+    /**
+     * Prompts the user for a playlist name and song title, then removes that song from the playlist.
+     */
+    
     private static void removeSongFromPlaylist() {
         System.out.print("Enter playlist name: ");
         String playlistName = scanner.nextLine().trim();
@@ -519,6 +602,10 @@ public class TextView {
             System.out.println("Failed to remove song. Check the playlist and song title.");
         }
     }
+    
+    /**
+     * Prompts the user for a playlist name and displays its details.
+     */
     
     private static void viewPlaylist() {
         System.out.print("Enter playlist name to view: ");
@@ -534,6 +621,10 @@ public class TextView {
         scanner.nextLine();
     }
     
+    /**
+     * Lists all playlist names in the library.
+     */
+    
     private static void listAllPlaylists() {
         ArrayList<String> lists = library.getPlaylists();
         if (lists.isEmpty()) {
@@ -546,5 +637,24 @@ public class TextView {
         }
         System.out.println("Press Enter to return.");
         scanner.nextLine();
+    }
+    
+ // ========================
+    // LIBRARY > FAVORITES
+    // ========================
+    
+    /**
+     * Lists all songs in the library that have a rating of FIVE (favorite songs).
+     */
+    private static void listFavoriteSongs() {
+        ArrayList<Song> faves = library.getFavorites();
+        if (faves.isEmpty()) {
+            System.out.println("No Songs Rated 5, yet!");
+        } else {
+            System.out.println("\n--- Favorite Songs in Your Library ---");
+            for (Song song : faves) {
+                System.out.println(" - " + song);
+            }
+        }
     }
 }
