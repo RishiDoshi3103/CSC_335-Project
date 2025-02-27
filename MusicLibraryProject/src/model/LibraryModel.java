@@ -23,19 +23,33 @@ package model;
 
 import java.util.ArrayList;
 
-import database.MusicStore;
-
 public class LibraryModel {
 	
 	private ArrayList<Song> library;
 	private ArrayList<Album> albums;
 	private ArrayList<PlayList> playlists;
 	
+	/**
+     * Constructor: initializes empty lists for songs, albums, and playlists.
+     */
+	
 	public LibraryModel() {
 		this.library = new ArrayList<Song>();
 		this.playlists = new ArrayList<PlayList>();
 		this.albums = new ArrayList<Album>();
 	}
+	
+	// ---------------------------
+    // SONG-RELATED METHODS
+    // ---------------------------
+    
+    /**
+     * Attempts to add a Song to the library.
+     * It creates a copy of the song if not already present.
+     *
+     * @param song the Song object to add
+     * @return true if the song was added; false if it already exists
+     */
 	
 	public boolean addSong(Song song) {
 		if (!checkForSongPresence(song)) {
@@ -46,6 +60,10 @@ public class LibraryModel {
 		return false;
 	}
 	
+	/**
+     * Returns a defensive copy of all songs in the library.
+     */
+	
 	public ArrayList<Song> getAllSongs() {
 		ArrayList<Song> result = new ArrayList<Song>();
 		for (Song target : this.library) {
@@ -54,7 +72,7 @@ public class LibraryModel {
 		}
 		return result;
 	}
-	
+	/**	
 	public ArrayList<Song> searchSongByTitle(String title) {
 		ArrayList<Song> result = new ArrayList<Song>();
 		for (Song target : this.library) {
@@ -66,16 +84,54 @@ public class LibraryModel {
 		}
 		return result;
 	}
+	*/
 	
-	public boolean setRating( String title, Rating rate) {
-		for (Song song : this.library) {
-			if (song.getTitle().equals(title)) {
-				song.setRating(rate);
-				return true;
-			}
-		}
-		return false;
+	/**
+     * Searches for songs by title (case-insensitive).
+     * Returns the actual Song objects from the library.
+     */
+	
+	public ArrayList<Song> searchSongByTitle(String title) {
+	    ArrayList<Song> result = new ArrayList<Song>();
+	    for (Song target : this.library) {
+	        if (target.getTitle().toLowerCase().equals(title.toLowerCase()) ||
+	                target.getTitle().toLowerCase().contains(title.toLowerCase())) {
+	            result.add(target);  // Use the existing Song object instead of creating a new one.
+	        }
+	    }
+	    return result;
 	}
+
+	
+//	public boolean setRating(String title, Rating rate) {
+//	    for (Song song : this.library) {
+//	        if (song.getTitle().equals(title)) {
+//	            song.setRating(rate);
+//	            return true;
+//	        }
+//	    }
+//	    return false;
+//	}
+	
+	/**
+     * Sets the rating of all songs matching the given title.
+     * Returns true if at least one song was updated.
+     */
+	
+	public boolean setRating(String title, Rating rate) {
+	    boolean found = false;
+	    for (Song song : this.library) {
+	        if (song.getTitle().equalsIgnoreCase(title)) {
+	            song.setRating(rate);
+	            found = true;
+	        }
+	    }
+	    return found;
+	}
+
+	/**
+     * Returns a list of distinct artist names from the songs in the library.
+     */
 	
 	public ArrayList<String> getArtists() {
 		ArrayList<String> list = new ArrayList<String>();
@@ -87,6 +143,14 @@ public class LibraryModel {
 		return list;
 	}
 	
+	// ---------------------------
+    // ALBUM-RELATED METHODS
+    // ---------------------------
+    
+    /**
+     * Returns a defensive copy of all albums in the library.
+     */
+	
 	public ArrayList<Album> getAllAlbumsInLibrary() {
 		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.albums) {
@@ -97,6 +161,27 @@ public class LibraryModel {
 		}
 		return list;
 	}
+	
+	/**
+     * Adds an album from the store to the library.
+     * Also adds each song from the album to the song library.
+     *
+     * @param album the Album to add
+     */
+	
+	public void addAlbumFromStore(Album album) {
+	    if (album != null) {
+	        // Add the album to the album list
+	        this.albumsInLibrary.add(album);
+	        // And add each song from the album to the song list (if needed)
+	        for (String track : album.getSongs()) {
+	            Song newSong = new Song(track, album.getTitle(), album.getArtist());
+	            this.addSong(newSong);
+	        }
+	    }
+	}
+
+	
 	/**
 	 * This helper function checks if a song is present in the current user library.
 	 * It returns true if a copy is present, false if not.
@@ -117,6 +202,15 @@ public class LibraryModel {
 		return false;
 	}
 	
+	// ---------------------------
+    // PLAYLIST-RELATED METHODS
+    // ---------------------------
+    
+	/**
+     * Creates a new playlist with the given name if it doesn't already exist.
+     * Returns true if created, false otherwise.
+     */
+	
 	public boolean createPlaylist(String name) {
 	    // Check if a playlist with this name already exists
 	    for (PlayList p : playlists) {
@@ -128,7 +222,11 @@ public class LibraryModel {
 	    playlists.add(newPlaylist);
 	    return true;
 	}
-
+	
+	/**
+     * Removes a playlist by name.
+     * Returns true if the playlist was removed, false if not found.
+     */
 	public boolean removePlaylist(String name) {
 		for (PlayList p : playlists) {
 			if(p.getName().equalsIgnoreCase(name)) {
@@ -138,6 +236,11 @@ public class LibraryModel {
 		}
 		return false;
 	}
+	
+	/**
+     * Adds a Song to an existing playlist if the song is not already present.
+     * Returns true if the song is added, false if the playlist doesn't exist or song already exists.
+     */
 
 	public boolean addSongToPlaylist(String playlistName, Song s) {
 		PlayList targetPlaylist = findPlayListByTitle(playlistName);
@@ -156,6 +259,10 @@ public class LibraryModel {
 		return true;
 	}
 	
+	/**
+     * Private helper method to find a playlist by name.
+     */
+	
 	// Helper method to find a playlist by name
 	private PlayList findPlayListByTitle(String name) {
 		for(PlayList p : playlists) {
@@ -165,6 +272,11 @@ public class LibraryModel {
 		}
 		return null; // Not Found
 	}
+	
+	 /**
+     * Removes a song (by title) from a specified playlist.
+     * Returns true if the song is removed, false otherwise.
+     */
 	
 	public boolean removeSongFromPlaylist(String playlistName, String songTitle) {
 	    for (PlayList p : playlists) {
@@ -180,6 +292,11 @@ public class LibraryModel {
 	    }
 	    return false;
 	}
+	
+	 /**
+     * Searches for a playlist by name.
+     * Returns the PlayList object if found; null otherwise.
+     */
 	
 	public PlayList searchPlaylistByName(String name) {
 	    for (PlayList p : playlists) {
@@ -198,14 +315,25 @@ public class LibraryModel {
 		return playlistNames;
 	}
 	
+	// ---------------------------
+    // FAVORITES
+    // ---------------------------
+    
+    /**
+     * Returns a list of songs from the library that are marked as favorite (rating == FIVE).
+     * Returns copies of the Song objects to maintain encapsulation.
+     */
+	
 	public ArrayList<Song> getFavorites() {
-		ArrayList<Song> faves = new ArrayList<Song>();
-		for (Song song : this.library) {
-			if (song.isFavorite()) {
-				Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-				target.setRating(song.getRating());
-			}
-		}
-		return faves;
+	    ArrayList<Song> faves = new ArrayList<Song>();
+	    for (Song song : this.library) {
+	        if (song.isFavorite()) {
+	            Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
+	            target.setRating(song.getRating());
+	            faves.add(target);  // Add the copy to the list.
+	        }
+	    }
+	    return faves;
 	}
+
 }

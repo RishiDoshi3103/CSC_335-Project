@@ -1,6 +1,6 @@
 /*
  * File: MusicStore.java
- * Author: Kyle Becker
+ * Author: Kyle Becker & Rishi Doshi
  * 
  * Purpose: This file is meant to replicate a working inventory for songs
  * and albums based on appropriately formatted .txt files, representing
@@ -64,10 +64,14 @@ public class MusicStore {
 	private ArrayList<Album> album_stock;
 	private File[] files;
 	
+	/**
+     * Default constructor that loads album and song data from the resources directory.
+     */
 	public MusicStore() {
 		this.album_stock = new ArrayList<Album>();
 		this.inventory = new ArrayList<Song>();
 		
+        // Locate the resources directory
 		Path path = Paths.get("resources");
 		File catalogue = new File(path.toAbsolutePath().toString());
 		
@@ -100,6 +104,10 @@ public class MusicStore {
 		}
 	}
 	
+	/**
+     * Searches for songs by title in the store inventory.
+     * Returns a list of copies of matching Song objects.
+     */
 	public ArrayList<Song> searchSongsByTitle(String title) {
 		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
@@ -112,6 +120,9 @@ public class MusicStore {
 		return list;
 	}
 	
+	/**
+     * Searches for songs by artist in the store inventory.
+     */
 	public ArrayList<Song> searchSongsByArtist(String artist) {
 		ArrayList<Song> list = new ArrayList<Song>();
 		for (Song song : this.inventory) {
@@ -123,6 +134,10 @@ public class MusicStore {
 		}
 		return list;
 	}
+	
+	/**
+     * Searches for albums by title in the store.
+     */
 	
 	public ArrayList<Album> searchAlbumsByTitle(String title) {
 		ArrayList<Album> list = new ArrayList<Album>();
@@ -139,6 +154,10 @@ public class MusicStore {
 		return list;
 	}
 	
+	/**
+     * Searches for albums by artist in the store.
+     */
+	
 	public ArrayList<Album> searchAlbumsByArtist(String artist) {
 		ArrayList<Album> list = new ArrayList<Album>();
 		for (Album album : this.album_stock) {
@@ -154,6 +173,10 @@ public class MusicStore {
 		return list;
 	}
 	
+	/**
+     * Returns the names of all files in the resources directory.
+     */
+	
 	public ArrayList<String> getFileNames() {
 		ArrayList<String> output = new ArrayList<String>();
 		for (File file : this.files) {
@@ -162,6 +185,10 @@ public class MusicStore {
 		return output;
 	}
 	
+	/**
+     * Loads an album based on the title and artist, by scanning through all files.
+     * If a file matches, it loads album data and its song list.
+     */
 	
 	private void loadAlbum(String title, String artist) {
 		for (File file : this.files) {
@@ -195,6 +222,10 @@ public class MusicStore {
 			}
 		}
 	}
+	
+	/**
+     * Loads all songs from each album in album_stock into the inventory.
+     */
 	
 	private void loadSongs() {
 		for (Album album : this.album_stock) {

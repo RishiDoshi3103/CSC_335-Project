@@ -19,6 +19,15 @@ public class Song {
 	private Rating rating;
 	private boolean favorite;
 	
+	 /**
+     * Constructs a new Song with the given title, album, and artist.
+     * Default rating is NOT_RATED and it is not marked as favorite.
+     *
+     * @param title  the song title.
+     * @param album  the album the song belongs to.
+     * @param artist the artist of the song.
+     */
+	
 	public Song(String title, String album, String artist) {
 		this.title = title;
 		this.album = album;
@@ -39,6 +48,14 @@ public class Song {
 		return this.artist;
 	}
 	
+	/**
+     * Sets the rating for the song.
+     * If the rating is set to FIVE, it automatically marks the song as favorite.
+     *
+     * @param rate the new rating (must not be null).
+     * @throws IllegalArgumentException if the rating is null.
+     */
+	
 	public void setRating(Rating rate) {
 		if(rate == null)
 			throw new IllegalArgumentException("Rating cannot be null.");
@@ -50,13 +67,25 @@ public class Song {
 		this.favorite = (rate == Rating.FIVE);
 	}
 	
+	/**
+     * Returns the current rating of the song.
+     */
+	
 	public Rating getRating() {
 		return this.rating;
 	}
 	
+	/**
+     * Returns whether the song is marked as favorite.
+     */
+	
   public boolean isFavorite() {
 		return favorite;
   	}
+  
+  /**
+   * Returns a formatted string representing the song.
+   */
   
 	@Override
 	public String toString() {
