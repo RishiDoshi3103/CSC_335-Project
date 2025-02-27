@@ -15,8 +15,7 @@ public class Album {
 	private String genre;
 	private String year;
 	private List<String> songs;		// List of song titles
-	//private Rating rating;
-	//private boolean favorite;
+	
 	
   /**
    * Constructs a new Album with the given details.
@@ -68,26 +67,6 @@ public class Album {
 		return songs;
 	}
 	
-	/** No album favorite functionality necessary ** 
-	public Rating getRating() {
-		return rating;
-	}
-	
-	public void setRating(Rating rating) {
-		if(rating == null) {
-			throw new IllegalArgumentException("Rating Cannot Be Null.");
-		}
-		this.rating = rating;
-	}
-	
-	public boolean isFavortite() {
-		return favorite;
-	}
-	
-	public void setFavorite(boolean favorite) {
-		this.favorite = favorite;
-	}
-	*/
 	
 	@Override
 	public String toString () {

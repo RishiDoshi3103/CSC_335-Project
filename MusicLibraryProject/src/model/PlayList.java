@@ -10,9 +10,8 @@ import java.util.List;
 
 public class PlayList {
 	private String name;
-	private List<Song> songs;
-	private Rating rating;
-	private boolean favorite;
+	private ArrayList<Song> songs;
+	
 	
 	/**
      * Constructs a new PlayList with the specified name.
@@ -24,15 +23,13 @@ public class PlayList {
 	public PlayList(String name) {
 		this.name = name;
 		this.songs = new ArrayList<>();
-		this.rating = Rating.NOT_RATED;
-		this.favorite = false;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public List<Song> getSongs(){
+	public ArrayList<Song> getSongs(){
 		return songs;
 	}
 	
@@ -59,42 +56,11 @@ public class PlayList {
 		return songs.remove(song);
 	}
 	
-	public Rating getRating() {
-		return rating;
-	}
-	
-	/**
-     * Sets the playlist's rating.
-     * If the rating is set to FIVE, the playlist is automatically marked as favorite.
-     *
-     * @param rating the Rating to set (must not be null).
-     * @throws IllegalArgumentException if rating is null.
-     */
-	
-	public void setRating(Rating rating) {
-		if(rating == null) {
-			throw new IllegalArgumentException("Rating cannot be null.");
-		}
-		this.rating = rating;
-		this.favorite = (rating == Rating.FIVE);
-	}
-	
-	public boolean isFavorite() {
-		return favorite;
-	}
-	
-	public void setFavorite(boolean favorite) {
-		this.favorite = favorite;
-	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Playlist: ").append(name).append("\n");
-		sb.append("Rating: ").append(rating);
-		if(favorite) {
-			sb.append(" [Favorite] ");
-		}
 		sb.append("\nSongs:\n");
 		if(songs.isEmpty()) {
 			sb.append("No songs in this playlist.");

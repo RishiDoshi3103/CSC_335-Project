@@ -1,9 +1,27 @@
 package model;
 
+public class Rating {
+	
+	private Song song;
+	private int rating;
+	
+	public Rating(Song target, int score) {
+		this.song = target;
+		this.rating = score;
+	}
+	
+	public void setRating(int num) {
+		this.rating = num;
+	}
+	public Song getSong() {
+		return this.song;
+	}
+	
+	public int getRating() {
+		return this.rating;
+	}
+}
 /**
- * The Rating enum represents possible rating values for songs and albums.
- */
-
 public enum Rating {
 	NOT_RATED(0),
 	ONE(1),
@@ -22,7 +40,7 @@ public enum Rating {
      * Returns the numeric value of this rating.
      *
      * @return the rating value.
-     */
+     
 	
 	public int getValue() {
 		return value;
@@ -34,7 +52,7 @@ public enum Rating {
      * @param value the integer value (0 to 5)
      * @return the corresponding Rating, or throws an exception if not found.
      * @throws IllegalArgumentException if the value is outside the range 0-5.
-     */
+     
 	
 	public static Rating fromInt(int value) {
 		for(Rating r : Rating.values()) {
@@ -49,4 +67,5 @@ public enum Rating {
 	public String toString() {
 		return (this == NOT_RATED) ? "NOT_RATED" : String.valueOf(value);
 	}
-}
+	*/
+

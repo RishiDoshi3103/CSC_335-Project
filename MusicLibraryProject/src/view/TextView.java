@@ -32,8 +32,6 @@ public class TextView {
     private static Scanner scanner = new Scanner(System.in);
     
     public static void main(String[] args) {
-        // Optionally, load store data here:
-        // store.loadAlbums("resources/albums.txt", "resources");
         
         while (true) {
             System.out.println("\n--- Rishi & Kyle's Music Library ---");
@@ -230,6 +228,12 @@ public class TextView {
                         }
                     }
                     System.out.println(addedCount + " song(s) added from: " + selected.getTitle());
+                    if (library.addAlbum(selected)) {
+                    	System.out.println("Successfully added Album: " + selected.getTitle());
+                    }
+                    else {
+                    	System.out.println("Error: Album already in library, or failed to add.");
+                    }
                 } else {
                     System.out.println("Invalid index. Try again.");
                 }
@@ -283,9 +287,10 @@ public class TextView {
             System.out.println("\n--- Library > Songs ---");
             System.out.println("1. List all songs");
             System.out.println("2. Search for a song by title");
-            System.out.println("3. Rate a song");
-            System.out.println("4. Mark a song as favorite");
-            System.out.println("5. Back to Library Menu");
+            System.out.println("3. Search for a song by artist");
+            System.out.println("4. Rate a song");
+            System.out.println("5. Mark a song as favorite");
+            System.out.println("6. Back to Library Menu");
             System.out.print("Enter choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -297,12 +302,15 @@ public class TextView {
                     searchSongInLibrary();
                     break;
                 case "3":
+                	searchSongInLibraryArtist();
+                	break;
+                case "4":
                     rateSongInLibrary();
                     break;
-                case "4":
+                case "5":
                     markSongAsFavorite();
                     break;
-                case "5":
+                case "6":
                     songsRunning = false;
                     break;
                 default:
@@ -339,6 +347,21 @@ public class TextView {
         }
     }
     
+    private static void searchSongInLibraryArtist() {
+    	System.out.print("Enter song artist to search in library: ");
+    	String artist = scanner.nextLine().trim();
+    	ArrayList<Song> found = library.searchSongByArtist(artist);
+    	if (found.size() > 0) {
+    		int i = 1;
+    		for (Song song : found) {
+    			System.out.println(Integer.toString(i) + ". " + song.toString());
+    			i++;
+    		}
+    	} else {
+    		System.out.println("Song not found in library.");
+    	}
+    }
+    
     private static void rateSongInLibrary() {
         System.out.print("Enter song title to rate: ");
         String title = scanner.nextLine().trim();
@@ -359,13 +382,8 @@ public class TextView {
                 System.out.println("Rating must be between 1 and 5.");
                 return;
             }
-            if (library.setRating(song.get(0).getTitle(), Rating.fromInt(ratingVal))) {
-            	System.out.println("Song successfully rated " + Integer.toString(ratingVal) + ": " + song.get(0).toString());
-            }
-            else {
-            	System.out.println("Error during rating.");
-            	return;
-            }
+            library.setRating(song.get(0), ratingVal); 
+            System.out.println("Song successfully rated " + Integer.toString(ratingVal) + ": " + song.get(0).toString());
         } catch (NumberFormatException e) {
             System.out.println("Invalid rating input.");
         }
@@ -383,14 +401,8 @@ public class TextView {
         	System.out.println("Multiple Songs found with title: " + title);
         	return;
         }
-        if (library.setRating(songs.get(0).getTitle(), Rating.FIVE)) {
-        	System.out.println("Song successfully marked as favorite: " + songs.get(0).toString());
-        }
-        else {
-        	System.out.println("Error during marking.");
-        	return;
-        }
-        
+        library.setRating(songs.get(0), 5);
+        System.out.println("Song successfully marked as favorite: " + songs.get(0).toString());
     }
     
     // ---- Library > Artists Submenu ----
@@ -410,6 +422,36 @@ public class TextView {
     
     // ---- Library > Albums Submenu ----
     private static void libraryAlbumsMenu() {
+        boolean albumsRunning = true;
+        while (albumsRunning) {
+            System.out.println("\n--- Library > Albums ---");
+            System.out.println("1. List all albums");
+            System.out.println("2. Search for an album by title");
+            System.out.println("3. Search for an album by artist");
+            System.out.println("4. Back to Library Menu");
+            System.out.print("Enter choice: ");
+            
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    listAllAlbums();
+                    break;
+                case "2":
+                    searchAlbumInLibraryByTitle();
+                    break;
+                case "3":
+                    searchAlbumInLibraryByArtist();
+                    break;
+                case "4":
+                    albumsRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+
+    private static void listAllAlbums() {
         ArrayList<Album> albums = library.getAllAlbumsInLibrary();
         if (albums.isEmpty()) {
             System.out.println("No albums in your library.");
@@ -420,10 +462,44 @@ public class TextView {
                 System.out.println("---------------------");
             }
         }
-        System.out.println("Press Enter to return to Library Menu.");
+        System.out.println("Press Enter to return to Albums Menu.");
         scanner.nextLine();
     }
-    
+
+    private static void searchAlbumInLibraryByTitle() {
+        System.out.print("Enter album title to search for: ");
+        String title = scanner.nextLine().trim();
+        ArrayList<Album> albums = library.searchAlbumsByTitle(title);
+        if (albums.isEmpty()) {
+            System.out.println("No albums found with that title.");
+        } else {
+            System.out.println("\n--- Search Results ---");
+            for (Album album : albums) {
+                System.out.println(album);
+                System.out.println("---------------------");
+            }
+        }
+        System.out.println("Press Enter to return to Albums Menu.");
+        scanner.nextLine();
+    }
+
+    private static void searchAlbumInLibraryByArtist() {
+        System.out.print("Enter album artist to search for: ");
+        String artist = scanner.nextLine().trim();
+        ArrayList<Album> albums = library.searchAlbumsByArtist(artist);
+        if (albums.isEmpty()) {
+            System.out.println("No albums found by that artist.");
+        } else {
+            System.out.println("\n--- Search Results ---");
+            for (Album album : albums) {
+                System.out.println(album);
+                System.out.println("---------------------");
+            }
+        }
+        System.out.println("Press Enter to return to Albums Menu.");
+        scanner.nextLine();
+    }
+
     // ---- Library > Playlists Submenu ----
     private static void libraryPlaylistsMenu() {
         boolean running = true;
@@ -433,7 +509,7 @@ public class TextView {
             System.out.println("2. Remove a playlist");
             System.out.println("3. Add a song to a playlist");
             System.out.println("4. Remove a song from a playlist");
-            System.out.println("5. View a playlist");
+            System.out.println("5. Search for a playlist");
             System.out.println("6. List all playlists");
             System.out.println("7. Back to Library Menu");
             System.out.print("Enter choice: ");
@@ -478,54 +554,191 @@ public class TextView {
     }
     
     private static void removePlaylist() {
-        System.out.print("Enter playlist name to remove: ");
-        String name = scanner.nextLine().trim();
-        if (library.removePlaylist(name)) {
-            System.out.println("Playlist '" + name + "' removed.");
-        } else {
-            System.out.println("Playlist not found or could not be removed.");
+        ArrayList<String> playlists = library.getPlaylists();  // Fetch the list of playlists
+        if (playlists.isEmpty()) {
+            System.out.println("No playlists available.");
+            return;
+        }
+
+        // List all playlists with indices
+        System.out.println("\n--- Available Playlists ---");
+        for (int i = 0; i < playlists.size(); i++) {
+            System.out.println(i + ". " + playlists.get(i));
+        }
+
+        System.out.print("Enter the index of the playlist to remove or type 'exit' to return: ");
+        String input = scanner.nextLine().trim();
+
+        if (input.equalsIgnoreCase("exit")) {
+            return;
+        }
+
+        try {
+            int index = Integer.parseInt(input);
+            if (index >= 0 && index < playlists.size()) {
+                String playlistName = playlists.get(index);
+                if (library.removePlaylist(playlistName)) {
+                    System.out.println("Playlist '" + playlistName + "' removed.");
+                } else {
+                    System.out.println("Playlist could not be removed.");
+                }
+            } else {
+                System.out.println("Invalid index. Try again.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a valid index or 'exit'.");
         }
     }
-    
+
     private static void addSongToPlaylist() {
-        System.out.print("Enter playlist name: ");
-        String playlistName = scanner.nextLine().trim();
+        // Display the list of playlists first
+        ArrayList<String> playlists = library.getPlaylists();
+        if (playlists.isEmpty()) {
+            System.out.println("No playlists available in your library.");
+            return;
+        }
+
+        // Display available playlists for user to choose
+        System.out.println("\n--- Available Playlists ---");
+        for (int i = 0; i < playlists.size(); i++) {
+            System.out.println(i + ". " + playlists.get(i));
+        }
+
+        // Prompt until a valid playlist index is entered or user types "exit"
+        int playlistIndex = -1;
+        while (playlistIndex < 0 || playlistIndex >= playlists.size()) {
+            System.out.print("Enter playlist number to add song to (or type 'exit' to cancel): ");
+            String input = scanner.nextLine().trim();
+
+            // Check if user wants to exit
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting add song to playlist.");
+                return;  // Exit the method and return to previous state (e.g., main menu)
+            }
+
+            try {
+                playlistIndex = Integer.parseInt(input);
+                if (playlistIndex < 0 || playlistIndex >= playlists.size()) {
+                    System.out.println("Invalid playlist index. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number or 'exit' to cancel.");
+            }
+        }
+
+        String playlistName = playlists.get(playlistIndex);
+
+        // Prompt the user for the song they want to add
         System.out.print("Enter song title to add: ");
         String songTitle = scanner.nextLine().trim();
         ArrayList<Song> songs = library.searchSongByTitle(songTitle);
-        if (songs.size() == 0) {
-            System.out.println("Song not found in library. Add it to library first.");
+
+        if (songs.isEmpty()) {
+            System.out.println("Song not found in library. Add it to the library first.");
             return;
         }
+
         for (Song song : songs) {
-        	if (library.addSongToPlaylist(playlistName, song)) {
-        		System.out.println("Song added to playlist: " + song.toString());
-        	}
-        	else {
-        		System.out.println("Failed to add song: " + song.toString());
-        		System.out.println("Playlist might not exist or the song is already there.");
-        	}
+            if (library.addSongToPlaylist(playlistName, song)) {
+                System.out.println("Song added to playlist: " + song.toString());
+            } else {
+                System.out.println("Failed to add song: " + song.toString());
+                System.out.println("Playlist might not exist or the song is already in there.");
+            }
         }
     }
-    
+
+
     private static void removeSongFromPlaylist() {
-        System.out.print("Enter playlist name: ");
-        String playlistName = scanner.nextLine().trim();
-        System.out.print("Enter song title to remove: ");
-        String songTitle = scanner.nextLine().trim();
-        if (library.removeSongFromPlaylist(playlistName, songTitle)) {
-            System.out.println("Song removed from playlist '" + playlistName + "'.");
+        // List all available playlists
+        ArrayList<String> playlists = library.getPlaylists();
+        if (playlists.isEmpty()) {
+            System.out.println("No playlists available in your library.");
+            return;
+        }
+
+        // Display the list of playlists for the user to choose from
+        System.out.println("\n--- Available Playlists ---");
+        for (int i = 0; i < playlists.size(); i++) {
+            System.out.println(i + ". " + playlists.get(i));
+        }
+
+        // Prompt until a valid playlist index is entered or user types "exit"
+        int playlistIndex = -1;
+        while (playlistIndex < 0 || playlistIndex >= playlists.size()) {
+            System.out.print("Enter playlist number to remove song from (or type 'exit' to cancel): ");
+            String input = scanner.nextLine().trim();
+
+            // Check if the user wants to exit
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting remove song from playlist.");
+                return;  // Exit the method and return to previous state
+            }
+
+            try {
+                playlistIndex = Integer.parseInt(input);
+                if (playlistIndex < 0 || playlistIndex >= playlists.size()) {
+                    System.out.println("Invalid playlist index. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number or 'exit' to cancel.");
+            }
+        }
+
+        String playlistName = playlists.get(playlistIndex);
+        PlayList playlist = library.searchPlaylistByName(playlistName);
+
+        // List songs in the selected playlist
+        ArrayList<Song> playlistSongs = playlist.getSongs();
+        if (playlistSongs.isEmpty()) {
+            System.out.println("No songs in this playlist.");
+            return;
+        }
+
+        // Display the songs in the playlist
+        System.out.println("\n--- Songs in Playlist: " + playlistName + " ---");
+        for (int i = 0; i < playlistSongs.size(); i++) {
+            System.out.println(i + ". " + playlistSongs.get(i));
+        }
+
+        // Prompt the user to select the index of the song they want to remove
+        int songIndex = -1;
+        while (songIndex < 0 || songIndex >= playlistSongs.size()) {
+            System.out.print("Enter song number to remove (or type 'exit' to cancel): ");
+            String input = scanner.nextLine().trim();
+
+            // Check if the user wants to exit
+            if (input.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting remove song from playlist.");
+                return;  // Exit the method and return to previous state
+            }
+
+            try {
+                songIndex = Integer.parseInt(input);
+                if (songIndex < 0 || songIndex >= playlistSongs.size()) {
+                    System.out.println("Invalid song index. Please try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number or 'exit' to cancel.");
+            }
+        }
+
+        Song songToRemove = playlistSongs.get(songIndex);
+
+        // Attempt to remove the song from the playlist
+        if (library.removeSongFromPlaylist(playlistName, songToRemove.getTitle())) {
+            System.out.println("Song removed from playlist: " + songToRemove.toString());
         } else {
-            System.out.println("Failed to remove song. Check the playlist and song title.");
+            System.out.println("Failed to remove song from playlist. It may not be in the playlist.");
         }
     }
-    
+
     private static void viewPlaylist() {
         System.out.print("Enter playlist name to view: ");
         String playlistName = scanner.nextLine().trim();
         PlayList p = library.searchPlaylistByName(playlistName);
         if (p != null) {
-            System.out.println("\nPlaylist: " + p.getName());
+            //System.out.println("\nPlaylist: " + p.getName());
             System.out.println(p);
         } else {
             System.out.println("Playlist not found.");
