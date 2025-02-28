@@ -392,7 +392,9 @@ public class LibraryModel {
 	/**
 	 * Returns a list of songs that have a rating of 5 (max).
 	 * Relies on the immutability of the song class to maintain
-	 * encapsulation.
+	 * encapsulation. Avoids the antipattern of temporary fields
+	 * by adding the immutable songs to list, if they're paired
+	 * with a 5 rating.
 	 * 
 	 * @return faves  ArrayList of songs with a 5 rating
 	 */
