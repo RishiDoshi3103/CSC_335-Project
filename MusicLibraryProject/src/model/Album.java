@@ -67,7 +67,11 @@ public class Album {
 	}
 
 	public List<String> getSongs() {
-		return songs;
+		List<String> list = new ArrayList<String>();
+		for (String song : songs) {
+			list.add(song);
+		}
+		return list;
 	}
 	
 	

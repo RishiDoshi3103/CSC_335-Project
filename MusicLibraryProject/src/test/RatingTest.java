@@ -20,5 +20,5 @@ class RatingTest {
 		rate.setRating(5);
 		assertEquals(rate.getRating(), 5);
 	}
-
+	
 }

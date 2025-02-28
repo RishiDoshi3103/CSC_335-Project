@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,6 +61,23 @@ class PlayListTest {
 	        String output = playlist.toString();
 	        assertTrue(output.contains("My Playlist"), "toString should include playlist name.");
 	        assertTrue(output.contains("TitleA"), "toString should include added songs.");
+	    }
+	    
+	    @Test
+	    void encapsulationTest() {
+	        Song song = new Song("TitleA", "AlbumA", "ArtistA");
+	        playlist.addSong(song);
+	        
+	        ArrayList<Song> playlist1 = playlist.getSongs();
+	        Song song2 = new Song("TitleA", "AlbumA", "ArtistA");
+
+	        playlist1.remove(0);
+	        playlist.removeSong(song2);
+	        
+	        assertEquals(playlist.getSongs().size(), 0);
+
+	        assertFalse(playlist.removeSong(song2));
+
 	    }
 
 }

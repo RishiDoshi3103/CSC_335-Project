@@ -37,7 +37,11 @@ public class PlayList {
 	}
 	
 	public ArrayList<Song> getSongs(){
-		return songs;
+		ArrayList<Song> list = new ArrayList<Song>();
+		for (Song song : songs) {
+			list.add(song);
+		}
+		return list;
 	}
 	
 	 /**
@@ -60,7 +64,15 @@ public class PlayList {
      */
 	
 	public boolean removeSong(Song song) {
-		return songs.remove(song);
+		for (Song target : songs) {
+			if (target.getTitle().equalsIgnoreCase(song.getTitle()) 
+					&& target.getAlbum().equalsIgnoreCase(song.getAlbum()) 
+					&& target.getArtist().equalsIgnoreCase(song.getArtist())) {
+						songs.remove(target);
+						return true;
+					}
+		}
+		return false;
 	}
 	
 	
@@ -68,7 +80,7 @@ public class PlayList {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Playlist: ").append(name).append("\n");
-		sb.append("\nSongs:\n");
+		sb.append("Songs:\n");
 		if(songs.isEmpty()) {
 			sb.append("No songs in this playlist.");
 		}
