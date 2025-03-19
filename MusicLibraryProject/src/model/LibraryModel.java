@@ -25,12 +25,14 @@ public class LibraryModel {
 	private ArrayList<Album> albums;
 	private ArrayList<PlayList> playlists;
 	private ArrayList<Rating> ratings;
+	private Player player;
 	
 	public LibraryModel() {
 		this.library = new ArrayList<Song>();
 		this.playlists = new ArrayList<PlayList>();
 		this.albums = new ArrayList<Album>();
 		this.ratings = new ArrayList<Rating>();
+		this.player = new Player();
 	}
 	
 	/**
@@ -406,5 +408,17 @@ public class LibraryModel {
 			}
 		}
 		return faves;
+	}
+	
+	/**
+	 * Plays the input song via the player. Immediately sets the 
+	 * song to the current, increments its' track play count, puts
+	 * it into the the 10 most recent.
+	 */
+	public Track playSong(Song song) {
+		if (this.player.addTrack(song)) {
+			return this.player.getTrack(song, true);
+		}
+		return null;
 	}
 }

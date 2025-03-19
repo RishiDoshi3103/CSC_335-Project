@@ -26,17 +26,27 @@ import model.LibraryModel;
 import model.PlayList;
 import model.Rating;
 import model.Song;
+import model.Track;
 
 public class TextView {
 
 	private static MusicStore store = new MusicStore();
     private static LibraryModel library = new LibraryModel();
     private static Scanner scanner = new Scanner(System.in);
+    private static Track current; // Song currently playing
     
     public static void main(String[] args) {
-        
-        while (true) {
+        // login
+        mainMenu();
+    }
+    
+    private static void mainMenu() {
+    	boolean menuRunning = true;
+    	while (menuRunning) {
             System.out.println("\n--- Rishi & Kyle's Music Library ---");
+            if (current != null) {
+            	System.out.println("Currently Playing: " + current.getSong().toString());
+            }
             System.out.println("- Store:");
             System.out.println("    1. Search Store\n");
             System.out.println("- Library:");
@@ -44,8 +54,9 @@ public class TextView {
             System.out.println("    3. Artists");
             System.out.println("    4. Albums");
             System.out.println("    5. Playlists");
-            System.out.println("    6. Favorite Songs\n");
-            System.out.println("7. Exit Music Player\n");
+            System.out.println("    6. Favorite Songs");
+            System.out.println("    7. Music Player\n");
+            System.out.println("8. Exit Music Player\n");
             System.out.print("Enter Choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -78,6 +89,9 @@ public class TextView {
                 	}
                 	break;
                 case "7":
+                	libraryPlayer();
+                	break;
+                case "8":
                     System.out.println("--- Exiting ---");
                     scanner.close();
                     System.exit(0);
@@ -88,6 +102,31 @@ public class TextView {
         }
     }
     
+    private static void libraryPlayer() {
+    	while(true) {
+    		System.out.println("\n--- Player ---");
+    		ArrayList<Song> songs = library.getAllSongs();
+            printSongList(songs);
+            System.out.println("Choose a Song to Play - Enter index, or type exit to go back:");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+            try {
+     
+                int index = Integer.parseInt(input);
+                if (index >= 0 && index < songs.size()) {
+                    Song selected = songs.get(index);
+                    current = library.playSong(selected);
+                    break;
+                } else {
+                    System.out.println("Invalid index. Try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a valid number or 'exit'.");
+            }
+        }
+    }
     // ========================
     // STORE MENU FUNCTIONS
     // ========================
