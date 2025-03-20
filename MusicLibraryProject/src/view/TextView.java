@@ -33,7 +33,7 @@ public class TextView {
 	private static MusicStore store = new MusicStore();
     private static LibraryModel library = new LibraryModel();
     private static Scanner scanner = new Scanner(System.in);
-    private static Track current; // Song currently playing
+    private static Song current; // Song currently playing
     
     public static void main(String[] args) {
         // login
@@ -45,7 +45,7 @@ public class TextView {
     	while (menuRunning) {
             System.out.println("\n--- Rishi & Kyle's Music Library ---");
             if (current != null) {
-            	System.out.println("Currently Playing: " + current.getSong().toString());
+            	System.out.println("Currently Playing: " + current);
             }
             System.out.println("- Store:");
             System.out.println("    1. Search Store\n");

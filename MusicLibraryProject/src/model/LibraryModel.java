@@ -16,23 +16,27 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.MusicStore;
 
 public class LibraryModel {
 	
-	private ArrayList<Song> library;
+	private HashMap<Song, Integer> library;
 	private ArrayList<Album> albums;
 	private ArrayList<PlayList> playlists;
 	private ArrayList<Rating> ratings;
-	private Player player;
 	
 	public LibraryModel() {
-		this.library = new ArrayList<Song>();
+		this.library = new HashMap<Song, Integer>();
 		this.playlists = new ArrayList<PlayList>();
 		this.albums = new ArrayList<Album>();
 		this.ratings = new ArrayList<Rating>();
-		this.player = new Player();
+		
+		// Created For Every User
+		createPlaylist("Most Recently Played");
+		createPlaylist("Most Frequently Played");
 	}
 	
 	/**
@@ -48,9 +52,8 @@ public class LibraryModel {
 	 * 		   false Returns false if song not added
 	 */
 	public boolean addSong(Song song) {
-		if (!checkForSongPresence(song)) {
-			Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-			this.library.add(target);
+		if (!this.library.containsKey(song)) {
+			this.library.put(song, 0);
 			return true;
 		}
 		return false;
@@ -90,7 +93,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> getAllSongs() {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
 			result.add(addition);
 		}
@@ -106,7 +109,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> searchSongByTitle(String title) {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			if (target.getTitle().toLowerCase().equals(title.toLowerCase()) ||
 					target.getTitle().toLowerCase().contains(title.toLowerCase())) {
 				Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
@@ -125,7 +128,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> searchSongByArtist(String artist) {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			if (target.getArtist().equalsIgnoreCase(artist) ||
 					target.getArtist().toLowerCase().contains(artist.toLowerCase())) {
 				Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
@@ -164,7 +167,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<String> getArtists() {
 		ArrayList<String> list = new ArrayList<String>();
-		for (Song song : this.library) {
+		for (Song song : this.library.keySet()) {
 			if (!list.contains(song.getArtist())) {
 				list.add(song.getArtist());
 			}
@@ -243,10 +246,8 @@ public class LibraryModel {
 	 * 		   false    Returns false is song is not currently in library
 	 */
 	private boolean checkForSongPresence(Song target) {
-		for (Song song : this.library) {
-			if (song.getTitle().toLowerCase().equals(target.getTitle().toLowerCase())
-			  && song.getAlbum().toLowerCase().equals(target.getAlbum().toLowerCase())
-			  && song.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
+		for (Song song : this.library.keySet()) {
+			if (song.equals(target)) {
 				return true;
 			}
 		}
@@ -325,10 +326,8 @@ public class LibraryModel {
 			return false;
 		}
 		
-		for(Song existing : targetPlaylist.getSongs()) {
-			if(existing.getTitle().equalsIgnoreCase(s.getTitle())){
-				return false; // Song is Already is in the Playlist
-			}
+		if (targetPlaylist.getSongs().contains(s)) {
+			return false;
 		}
 		
 		//If the song is not found, then add the song
@@ -411,14 +410,53 @@ public class LibraryModel {
 	}
 	
 	/**
-	 * Plays the input song via the player. Immediately sets the 
-	 * song to the current, increments its' track play count, puts
-	 * it into the the 10 most recent.
+	 * This function represents the playing of a song, based on the songs
+	 * available in the library. If the target song is not in the library,
+	 * it returns null. If the song is in the library, it increments its'
+	 * play count hash value, updates the Most Recently Played playlist,
+	 * and updates the Most Frequently Played playlist.
 	 */
-	public Track playSong(Song song) {
-		if (this.player.addTrack(song)) {
-			return this.player.getTrack(song, true);
+	public Song playSong(Song song) {
+		if (!library.containsKey(song)) {
+			return null;
 		}
-		return null;
+		int incrementCount = library.get(song) + 1;
+		library.put(song, incrementCount);
+		searchPlaylistByName("Most Recently Played").addToRecent(song);
+		updateMostPlayed();
+		return song;
 	}
+	
+	/*
+	 * This function converts the song/playcounts in the hashmap to an
+	 * ArrayList of the entries, perform a bubble sort to get the
+	 * necessary values to the front, then extract the first relevant
+	 * songs into specific list of songs that gets assigned in the 
+	 * Most Frequently Played playlist. 
+	 */
+	public void updateMostPlayed() {
+        ArrayList<Map.Entry<Song, Integer>> songList = new ArrayList<>(library.entrySet());
+
+        for (int i = 0; i < songList.size(); i++) {
+            for (int j = i + 1; j < songList.size(); j++) {
+                if (songList.get(i).getValue() < songList.get(j).getValue()) {
+                    Map.Entry<Song, Integer> temp = songList.get(i);
+                    songList.set(i, songList.get(j));
+                    songList.set(j, temp);
+                }
+            }
+        }
+
+        // Get the top 10 songs from the sorted list
+        ArrayList<Song> topSongs = new ArrayList<>();
+        for (int i = 0; i < Math.min(10, songList.size()); i++) {
+        	if (songList.get(i).getValue() > 0) {
+            topSongs.add(songList.get(i).getKey());
+        	}
+        }
+
+        searchPlaylistByName("Most Frequently Played").newSetList(topSongs);
+    }
+	
+	
 }

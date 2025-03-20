@@ -75,6 +75,39 @@ public class PlayList {
 		return false;
 	}
 	
+	/**
+	 * This function is meant to assist in setting the 10 most
+	 * frequently played songs.
+	 * 
+	 * @param groupAdd
+	 */
+	public void newSetList(ArrayList<Song> groupAdd) {
+		this.songs.clear();
+		for(Song song : groupAdd) {
+			addSong(song);
+		}
+	}
+	
+	/** 
+	 * This function is meant to assist in adding to the 10 
+	 * Recently played playlist, ensuring it is 10, and adding
+	 * to front.
+	 * 
+	 * @param song
+	 */
+	public void addToRecent(Song song) {
+		if (this.songs.contains(song)) {
+			this.songs.remove(song);
+			this.songs.addFirst(song);
+		}
+		else {
+			this.songs.addFirst(song);
+		}
+		
+		while(this.songs.size() > 10) {
+			this.songs.removeLast();
+		}
+	}
 	
 	@Override
 	public String toString() {

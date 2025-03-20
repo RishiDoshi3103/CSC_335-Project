@@ -26,6 +26,7 @@ class LibraryModelTest {
 		
 		assertTrue(lib.addSong(song));
 		assertFalse(lib.addSong(song));
+		assertFalse(lib.addSong(new Song("Title", "Album", "Artist")));
 	}
 	
 	@Test
@@ -151,7 +152,7 @@ class LibraryModelTest {
 		album.addSong(song1);
 		
 		ArrayList<Album> list = lib.getAllAlbumsInLibrary();
-		assertEquals(list.size(), 0);
+		assertEquals(list.size(), 0); 
 		
 		lib.addAlbum(album);
 		lib.addAlbum(album1);
@@ -205,7 +206,7 @@ class LibraryModelTest {
 		
 		lib.createPlaylist("playlist2");
 		ArrayList<String> list = lib.getPlaylists();
-		assertEquals(list.toString(), "[playlist1, playlist2]");
+		assertEquals(list.toString(), "[Most Recently Played, Most Frequently Played, playlist1, playlist2]");
 		
 		assertFalse(lib.removePlaylist("wrong name"));
 		assertTrue(lib.removePlaylist("playlist1"));
@@ -229,4 +230,8 @@ class LibraryModelTest {
 		assertTrue(lib.removeSongFromPlaylist("playlist1", song1.getTitle()));
 	}
 	
+	@Test
+	void testPlaySongAndUpdateMostPlayed() {
+		LibraryModel lib = new LibraryModel();
+	}
 }
