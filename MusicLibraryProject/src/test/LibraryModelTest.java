@@ -233,5 +233,40 @@ class LibraryModelTest {
 	@Test
 	void testPlaySongAndUpdateMostPlayed() {
 		LibraryModel lib = new LibraryModel();
+		
+		Song song1 = new Song("1", "1", "1");
+    	Song song2 = new Song("2", "2", "2");
+    	Song song3 = new Song("3", "3", "3");
+    	Song song4 = new Song("4", "4", "4");
+    	Song song5 = new Song("5", "5", "5");
+    	
+    	lib.addSong(song1);
+    	lib.addSong(song2);
+    	lib.addSong(song3);
+    	lib.addSong(song4);
+    	lib.addSong(song5);
+    	
+    	lib.playSong(song1);
+    	lib.playSong(song1);
+    	lib.playSong(song2);
+    	lib.playSong(song4);
+    	lib.playSong(song2);
+    	lib.playSong(song2);
+    	lib.playSong(song2);
+    	lib.playSong(song3);
+    	
+    	ArrayList<Song> recent = lib.searchPlaylistByName("Most Recently Played").getSongs();
+    	assertEquals(recent.size(), 4);
+    	assertEquals(recent.get(0).getTitle(), "3");
+    	assertEquals(recent.get(1).getTitle(), "2");
+    	assertEquals(recent.get(2).getTitle(), "4");
+    	assertEquals(recent.get(3).getTitle(), "1");
+    	
+    	ArrayList<Song> freq = lib.searchPlaylistByName("Most Frequently Played").getSongs();
+    	assertEquals(freq.size(), 4);
+    	assertEquals(freq.get(0).getTitle(), "2");
+    	assertEquals(freq.get(1).getTitle(), "1");
+    	assertEquals(freq.get(2).getTitle(), "4");
+    	assertEquals(freq.get(3).getTitle(), "3");
 	}
 }
