@@ -56,5 +56,4 @@ MusicLibraryProject/
    ```bash
    javac -d out -sourcepath src src/view/TextView.java
 
-  ```bash
    jar cfe MusicLibraryProject.jar view.TextView -C out
