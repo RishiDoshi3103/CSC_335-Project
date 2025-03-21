@@ -17,6 +17,7 @@
 
 package view;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -26,6 +27,8 @@ import model.LibraryModel;
 import model.PlayList;
 import model.Rating;
 import model.Song;
+import model.UserAccount;
+import model.UserManager;
 
 public class TextView {
 
@@ -34,17 +37,112 @@ public class TextView {
     private static Scanner scanner = new Scanner(System.in);
     private static Song current; // Song currently playing
     
+ // UserManager for handling login/registration.
+    private static UserManager um = new UserManager();
+    
     public static void main(String[] args) {
-        // login
+    	// First, perform login/registration.
+        UserAccount user = displayLoginMenu();
+        library = user.getLibrary();
+        System.out.println("User's library loaded.");
+        // Then launch the main menu.
         mainMenu();
     }
+    
+    // ---------------------------
+    // LOGIN/REGISTRATION METHODS
+    // ---------------------------
+    
+    /**
+     * Displays a login/registration menu until a valid user is logged in.
+     * @return The logged-in UserAccount.
+     */
+    private static UserAccount displayLoginMenu() {
+        UserAccount loggedInUser = null;
+        while (loggedInUser == null) {
+            System.out.println("Welcome to the Music Library System (LA2)!");
+            System.out.println("1. Login");
+            System.out.println("2. Register");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine().trim();
+            if (choice.equals("1")) {
+                loggedInUser = login();
+            } else if (choice.equals("2")) {
+                register();
+            } else if (choice.equals("3")) {
+                System.out.println("--- Exiting ---");
+                scanner.close();
+                System.exit(0);
+            } else {
+                System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        return loggedInUser;
+    }
+    
+    private static String readPassword(String prompt) {
+        // Try to get the system console (will be null in some IDEs)
+        Console console = System.console();
+        if (console != null) {
+            char[] pwd = console.readPassword(prompt);
+            return new String(pwd);
+        } else {
+            // Fallback: password will be visible
+            System.out.print(prompt);
+            return scanner.nextLine().trim();
+        }
+    }
+
+    
+    private static UserAccount login() {
+        System.out.print("Enter Username: ");
+        String username = scanner.nextLine().trim();
+        String password = readPassword("Enter Password: ");
+        UserAccount user = um.login(username, password);
+        
+        if (user != null) {
+            System.out.println("Login successful. Welcome, " + user.getUsername() + "!");
+            return user;
+        } else {
+            System.out.println("Login failed. Please check your credentials.");
+            return null;
+        }
+    }
+
+    private static void register() {
+        System.out.print("Enter desired username: ");
+        String username = scanner.nextLine().trim();
+        String password = readPassword("Enter desired password: ");
+        if (um.registerUser(username, password)) {
+            System.out.println("Registration successful. You can now log in.");
+        } else {
+            System.out.println("Registration failed. Username may already be in use.");
+        }
+    }
+    
+    private static void logout() {
+        System.out.println("Logging out...");
+        // Reset session-specific data
+        current = null;
+        library = null;
+        // Return to login/registration screen
+        UserAccount user = displayLoginMenu();
+        library = user.getLibrary();
+        System.out.println(user.getUsername() + "'s library loaded.");
+    }
+
+    
+    // ---------------------------
+    // MAIN MENU METHODS
+    // ---------------------------
     
     private static void mainMenu() {
     	boolean menuRunning = true;
     	while (menuRunning) {
             System.out.println("\n--- Rishi & Kyle's Music Library ---");
             if (current != null) {
-            	System.out.println("Currently Playing: " + current);
+            	System.out.println("Currently Playing: " + current + "\n");
             }
             System.out.println("- Store:");
             System.out.println("    1. Search Store\n");
@@ -55,7 +153,8 @@ public class TextView {
             System.out.println("    5. Playlists");
             System.out.println("    6. Favorite Songs");
             System.out.println("    7. Music Player\n");
-            System.out.println("8. Exit Music Player\n");
+            System.out.println("    8. Logout");
+            System.out.println("9. Exit Music Player\n");
             System.out.print("Enter Choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -91,6 +190,9 @@ public class TextView {
                 	libraryPlayer();
                 	break;
                 case "8":
+                    logout();
+                    break;
+                case "9":
                     System.out.println("--- Exiting ---");
                     scanner.close();
                     System.exit(0);
