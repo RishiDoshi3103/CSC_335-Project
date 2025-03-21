@@ -121,12 +121,16 @@ public class TextView {
         }
     }
     
+    /**
+     * Logs out the current user.
+     * Resets session-specific data, then returns to the login/registration screen.
+     */
     private static void logout() {
         System.out.println("Logging out...");
-        // Reset session-specific data
+        // Here you might want to persist any changes before logging out.
         current = null;
         library = null;
-        // Return to login/registration screen
+        // Return to login/registration screen.
         UserAccount user = displayLoginMenu();
         library = user.getLibrary();
         System.out.println(user.getUsername() + "'s library loaded.");

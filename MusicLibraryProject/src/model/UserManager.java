@@ -26,7 +26,7 @@ public final class UserManager implements Serializable {
      */
     public UserManager(String filePath) {
         this.filePath = filePath;
-        loadUsers();
+        debugLoadUsers();
     }
     
     /**
@@ -71,14 +71,18 @@ public final class UserManager implements Serializable {
     }
     
     @SuppressWarnings("unchecked")
-    private void loadUsers() {
+    public void debugLoadUsers() {
         File file = new File(filePath);
-        if(!file.exists()){
+        if (!file.exists()) {
+            System.out.println("No user data file found.");
             return;
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            Map<String, UserAccount> loaded = (Map<String, UserAccount>) ois.readObject();
-            users.putAll(loaded);
+            Map<String, UserAccount> loadedUsers = (Map<String, UserAccount>) ois.readObject();
+            System.out.println("Loaded users: " + loadedUsers.keySet());
+            for (String username : loadedUsers.keySet()) {
+                System.out.println(username + "'s library: " + loadedUsers.get(username).getLibrary());
+            }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

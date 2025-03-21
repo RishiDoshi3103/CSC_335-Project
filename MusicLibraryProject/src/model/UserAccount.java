@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import model.LibraryModel;
 
 /**
  * UserAccount represents a registered user.
@@ -51,8 +52,9 @@ public final class UserAccount implements Serializable {
         }
     }
     
+    // Verification:
     public boolean verifyPassword(String password) {
-        if(password == null) return false;
+        // Reuse the SAME salt stored in this object
         String hashed = hashPassword(password, this.salt);
         return hashed.equals(this.passwordHash);
     }
