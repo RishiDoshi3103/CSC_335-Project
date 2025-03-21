@@ -65,6 +65,7 @@ public final class UserManager implements Serializable {
     private void saveUsers() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
             oos.writeObject(users);
+            System.out.println("DEBUG: Users saved: " + users.keySet());
         } catch (IOException e) {
             e.printStackTrace();
         }

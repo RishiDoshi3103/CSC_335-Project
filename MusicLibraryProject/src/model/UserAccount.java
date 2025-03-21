@@ -29,8 +29,9 @@ public final class UserAccount implements Serializable {
             throw new IllegalArgumentException("Username and password must not be empty.");
         }
         this.username = username;
-        this.salt = generateSalt();
+        this.salt = generateSalt();  // Only generate salt once at creation
         this.passwordHash = hashPassword(password, this.salt);
+        // Initialize the user's library, etc.
         this.library = new LibraryModel();
     }
     
@@ -54,8 +55,10 @@ public final class UserAccount implements Serializable {
     
     // Verification:
     public boolean verifyPassword(String password) {
-        // Reuse the SAME salt stored in this object
+        // Do not generate a new salt—reuse the stored one.
         String hashed = hashPassword(password, this.salt);
+        System.out.println("DEBUG: Stored hash: " + this.passwordHash);
+        System.out.println("DEBUG: Computed hash: " + hashed);
         return hashed.equals(this.passwordHash);
     }
     
