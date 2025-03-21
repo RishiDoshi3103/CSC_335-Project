@@ -55,4 +55,6 @@ MusicLibraryProject/
 ## How to Compile (Optional)
    ```bash
    javac -d out -sourcepath src src/view/TextView.java
-   jar cfe MusicLibraryProject.jar view.TextView -C out .
+
+  ```bash
+   jar cfe MusicLibraryProject.jar view.TextView -C out
