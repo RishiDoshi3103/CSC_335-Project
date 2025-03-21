@@ -59,6 +59,13 @@ public class LibraryModel {
 		return false;
 	}
 	
+	public boolean removeSong(Song song) {
+		if (this.library.containsKey(song)) {
+			this.library.remove(song);
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * This function adds a deep copy of an album to the library, and adds
 	 * each associated song to its' list as a string representation of the 
@@ -85,6 +92,24 @@ public class LibraryModel {
 		return false;
 	}
 	
+	/**
+	 * This function searches for target album and removes it from the
+	 * album library.
+	 * 
+	 * @param   album  Album to be removed
+	 * @return  true   Returns true if album successfully removed
+	 * 			false  Returns false if album not found, or failed to be removed
+	 */
+	public boolean removeAlbum(Album album) {
+		for (Album target : this.albums) {
+			if (target.getTitle().equals(album.getTitle()) 
+					&& target.getArtist().equals(album.getArtist())
+					&& target.getYear().equals(album.getYear())) {
+				return this.albums.remove(target);
+			}
+		}
+		return false; 
+	}
 	/**
 	 * Returns a deep copy list of all songs, adds extra levels of encapsulation
 	 * as the Song class was was made immutable during development.
@@ -158,6 +183,19 @@ public class LibraryModel {
 		ratings.add(rating);
 	}
 	
+	/** 
+	 * This function returns a Deep Copy list of Songs that have
+	 * been rated.
+	 * 
+	 * @return ArrayList<Rating> List of rated songs
+	 */
+	public ArrayList<Rating> getRatedSongs() {
+		ArrayList<Rating> result = new ArrayList<Rating>();
+		for (Rating r : this.ratings) {
+			result.add(new Rating(r.getSong(), r.getRating()));
+		}
+		return result;
+	}
 	
 	/**
 	 * Returns an ArrayList of Strings that represent all the artists
@@ -255,14 +293,14 @@ public class LibraryModel {
 	}
 	
 	/**
-	 * This helper function checks if an album is already present in the current user
+	 * This function checks if an album is already present in the current user
 	 * library. It returns true if a copy is present, false if not.
 	 * 
 	 * @param  target Album class object to search for in library
 	 * @return true   Returns true if album with same data is in library
 	 *         false  Returns false if not found
 	 */
-	private boolean checkForAlbumPresence(Album target) {
+	public boolean checkForAlbumPresence(Album target) {
 		for (Album album : this.albums) {
 			if (album.getTitle().toLowerCase().equals(target.getTitle().toLowerCase()) 
 					&& album.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {

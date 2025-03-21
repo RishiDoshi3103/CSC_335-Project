@@ -18,6 +18,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import database.MusicStore;
@@ -330,7 +331,8 @@ public class TextView {
             System.out.println("3. Search for a song by artist");
             System.out.println("4. Rate a song");
             System.out.println("5. Mark a song as favorite");
-            System.out.println("6. Back to Library Menu");
+            System.out.println("6. Remove a Song");
+            System.out.println("7. Back to Library Menu");
             System.out.print("Enter choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -351,6 +353,8 @@ public class TextView {
                     markSongAsFavorite();
                     break;
                 case "6":
+                	promptRemoveASong();
+                case "7":
                     songsRunning = false;
                     break;
                 default:
@@ -364,10 +368,61 @@ public class TextView {
         if (list.isEmpty()) {
             System.out.println("No songs in your library.");
         } else {
-            System.out.println("\n--- Songs in Your Library ---");
-            for (Song song : list) {
-                System.out.println(" - " + song.toString());
-            }
+        	System.out.println("\n--- Song > Lists ---");
+        	System.out.println("1. List All Songs");
+        	System.out.println("2. List Songs Sorted By Title");
+        	System.out.println("3. List Songs Sorted By Artist");
+        	System.out.println("4. List Songs Sorted By Rating");
+        	System.out.println("5. Shuffle Songs");
+        	System.out.println("6. Back to Song Menu");
+        	System.out.print("Enter Choice: ");
+        	String choice = scanner.nextLine().trim();
+        	switch (choice) {
+        		case "1":
+	    			 System.out.println("\n--- Songs in Your Library ---");
+	    	            for (Song song : list) {
+	    	                System.out.println(" - " + song.toString());
+	    	            }
+	    	            break;
+        		case "2":
+        			System.out.println("\n--- Songs in Your Library By Title ---");
+        			Collections.sort(list, (song1, song2) -> song1.getTitle().compareTo(song2.getTitle()));
+        			for (Song song : list) {
+        				System.out.println(" - " + song.toString());
+        			}
+        			break;
+        		case "3": 
+        			System.out.println("\n--- Songs in Your Library By Artist ---");
+        			Collections.sort(list, (song1, song2) -> song1.getArtist().compareTo(song2.getArtist()));
+        			for (Song song : list) {
+        				System.out.println(" - " + song.toString());
+        			}
+        			break;
+        		case "4":
+        			System.out.println("\n--- Songs in Your Rated Library By Rating ---");
+        			ArrayList<Rating> rates = library.getRatedSongs();
+        			if (rates.isEmpty()) {
+        				System.out.println("No songs have been rated yet.");
+        			}
+        			else {
+	        			Collections.sort(rates, (rate1, rate2) -> Integer.compare(rate1.getRating(), rate2.getRating()));
+	        			for (Rating rate : rates) {
+	        				System.out.println(" - " + rate.getSong() + " | Rating: " + rate.getRating());
+	        			}
+	        			break;
+        			}
+        		case "5":
+        			System.out.println("\n--- Shuffled Songs! ---");
+        			Collections.shuffle(list);
+        			for (Song song : list) {
+        				System.out.println(" - " + song.toString());
+        			}
+        			break;
+        		case "6":
+        			break;
+        		default:
+                    System.out.println("Invalid choice. Please try again.");
+        	}
         }
     }
     
@@ -442,7 +497,40 @@ public class TextView {
         	return;
         }
         library.setRating(songs.get(0), 5);
-        System.out.println("Song successfully marked as favorite: " + songs.get(0).toString());
+        System.out.println("Song successfully marked as favorite: " + songs.get(0).toString() + "\n");
+    }
+    
+    private static void promptRemoveASong() {
+    	while (true) {
+        	ArrayList<Song> songs = library.getAllSongs();
+        	System.out.print("\n");
+        	printSongList(songs);
+
+            System.out.println("\nRemove Song from library? Enter index, or type 'exit' to return:");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+            try {
+            	if (songs.isEmpty()) {
+            		System.out.println("\nSong list empty!");
+            		break;
+            	}
+                int index = Integer.parseInt(input);
+                if (index >= 0 && index < songs.size()) {
+                    Song selected = songs.get(index);
+                    if (library.removeSong(selected)) {
+                        System.out.println("Song Removed: " + selected);
+                    } else {
+                        System.out.println("Error: Song failed to be removed.");
+                    }
+                } else {
+                    System.out.println("Invalid index. Try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a valid number or 'exit'.");
+            }
+        }
     }
     
     // ---- Library > Artists Submenu ----
@@ -468,7 +556,8 @@ public class TextView {
             System.out.println("1. List all albums");
             System.out.println("2. Search for an album by title");
             System.out.println("3. Search for an album by artist");
-            System.out.println("4. Back to Library Menu");
+            System.out.println("4. Remove an Album");
+            System.out.println("5. Back to Library Menu");
             System.out.print("Enter choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -482,7 +571,9 @@ public class TextView {
                 case "3":
                     searchAlbumInLibraryByArtist();
                     break;
-                case "4":
+                case "4" :
+                	promptRemoveAnAlbum();
+                case "5":
                     albumsRunning = false;
                     break;
                 default:
@@ -538,6 +629,42 @@ public class TextView {
         }
         System.out.println("Press Enter to return to Albums Menu.");
         scanner.nextLine();
+    }
+    
+    private static void promptRemoveAnAlbum() {
+    	while (true) {
+        	ArrayList<Album> albums = library.getAllAlbumsInLibrary();
+        	System.out.print("\n");
+        	printAlbumList(albums);
+
+            System.out.println("\nRemove Song from library? Enter index, or type 'exit' to return:");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+            try {
+            	if (albums.isEmpty()) {
+            		System.out.println("\nSong list empty!");
+            		break;
+            	}
+                int index = Integer.parseInt(input);
+                if (index >= 0 && index < albums.size()) {
+                    Album selected = albums.get(index);
+                    if (library.removeAlbum(selected)) {
+                    	for (String song : selected.getSongs()) {
+                    		library.removeSong(new Song(song, selected.getTitle(), selected.getArtist()));
+                    	}
+                        System.out.println("Album Removed: " + selected);
+                    } else {
+                        System.out.println("Error: Song failed to be removed.");
+                    }
+                } else {
+                    System.out.println("Invalid index. Try again.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a valid number or 'exit'.");
+            }
+        }
     }
 
     // ---- Library > Playlists Submenu ----
@@ -780,6 +907,15 @@ public class TextView {
         if (p != null) {
             //System.out.println("\nPlaylist: " + p.getName());
             System.out.println(p);
+            System.out.print("Shuffle Songs (y/n):");
+            String input = scanner.nextLine().trim();
+            if (input.toLowerCase().equals("y")) {
+            	ArrayList<Song> songs = p.getSongs();
+            	Collections.shuffle(songs);
+    			printSongList(songs);
+    			System.out.print("\n");
+            }
+
         } else {
             System.out.println("Playlist not found.");
         }
@@ -797,7 +933,7 @@ public class TextView {
                 System.out.println(" - " + name);
             }
         }
-        System.out.println("Press Enter to return.");
+        System.out.print("Press Enter to return.");
         scanner.nextLine();
     }
 }
