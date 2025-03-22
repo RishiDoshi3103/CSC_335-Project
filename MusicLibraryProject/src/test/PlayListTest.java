@@ -79,5 +79,52 @@ class PlayListTest {
 	        assertFalse(playlist.removeSong(song2));
 
 	    }
+	    
+	    @Test
+	    void testNewSetList() {
+	    	Song song1 = new Song("1", "1", "1");
+	    	Song song2 = new Song("2", "2", "2");
+	    	Song song3 = new Song("3", "3", "3");
+	    	Song song4 = new Song("4", "4", "4");
+	    	
+	    	playlist.addSong(song1);
+	    	playlist.addSong(song2);
+	    	
+	    	ArrayList<Song> newSongs = new ArrayList<Song>();
+	    	
+	    	newSongs.add(song3);
+	    	newSongs.add(song4);
+	    	playlist.newSetList(newSongs);
+	    	
+	    	ArrayList<Song> getSongList = playlist.getSongs();
+	    	assertEquals(getSongList.size(), 2);
+	    	assertEquals(getSongList.get(0).getTitle(), "3");
+	    	assertEquals(getSongList.get(1).getTitle(), "4");
+	    }
+	    
+	    @Test
+	    void testAddToRecent() {
+	    	Song song1 = new Song("1", "1", "1");
+	    	Song song2 = new Song("2", "2", "2");
+	    	Song song3 = new Song("3", "3", "3");
+	    	Song song4 = new Song("4", "4", "4");
+	    	
+	    	playlist.addSong(song1);
+	    	playlist.addSong(song2);
+	    	ArrayList<Song> getSongList = playlist.getSongs();
+	    	assertEquals(getSongList.get(0).getTitle(), "1");
+	    	
+
+	    	playlist.addToRecent(song3);
+	    	playlist.addToRecent(song4);
+	    	getSongList = playlist.getSongs();
+	    	assertEquals(getSongList.get(0).getTitle(), "4");
+	    	
+	    	playlist.addToRecent(song1);
+	    	assertEquals(getSongList.get(0).getTitle(), "4");
+	    	assertEquals(getSongList.size(), 4);
+	    	
+
+	    }
 
 }

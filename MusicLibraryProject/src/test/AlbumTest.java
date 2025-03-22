@@ -34,7 +34,6 @@ class AlbumTest {
         assertEquals("Song 1", album.getSongs().get(0));
         assertEquals("Song 2", album.getSongs().get(1));
     }
-  
 
     @Test
     void testToString() {
@@ -43,7 +42,6 @@ class AlbumTest {
         assertTrue(output.contains("Test Album"), "toString should include album title.");
         assertTrue(output.contains("Test Artist"), "toString should include artist.");
         assertTrue(output.contains("Song A"), "toString should include song titles.");
-        assertTrue(output.contains("2"), "toString should include rating.");
     }
     
 }

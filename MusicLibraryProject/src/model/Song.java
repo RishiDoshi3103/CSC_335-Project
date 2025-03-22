@@ -9,12 +9,23 @@
 
 package model;
 
-public class Song {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Song implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private final String title;
 	private final String album;
 	private final String artist;
 	
 	public Song(String title, String album, String artist) {
+		
+		if(title == null || album == null || artist == null) {
+            throw new IllegalArgumentException("Song fields must not be null.");
+        }
+		
 		this.title = title;
 		this.album = album;
 		this.artist = artist;
@@ -32,10 +43,25 @@ public class Song {
 	public String getArtist() {
 		return this.artist;
 	}
+	
   	
 	@Override
 	public String toString() {
 		return title + " by " + artist + " | Album: " + album;
-
+	}
+	
+	@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Song)) return false;
+        Song song = (Song) o;
+        return title.equals(song.title) &&
+               album.equals(song.album) &&
+               artist.equals(song.artist);
+    }
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(title, album, artist);
 	}
 }
