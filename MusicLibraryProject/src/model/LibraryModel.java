@@ -109,6 +109,9 @@ public class LibraryModel {
 	 * a copy of the album and returns true. It it already exists, returns
 	 * false.
 	 * 
+	 * Also, adds any songs not currently in library that were added with
+	 * the album.
+	 * 
 	 * @param   album  Album class to be added
 	 * @return  true   Returns true if album successfully added 
 	 * 			false  Returns false if song not added
@@ -118,6 +121,7 @@ public class LibraryModel {
 			Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 			for (String song : album.getSongs()) {
 				target.addSong(song);
+				addSong(new Song(song, album.getTitle(), album.getArtist()));
 			}
 			this.albums.add(target);
 			updateGenreLists();
@@ -126,14 +130,16 @@ public class LibraryModel {
 			for (Album target : this.albums) {
 				if (album.getTitle().toLowerCase().equals(target.getTitle().toLowerCase()) 
 						&& album.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
+					boolean newSongsFlag = false;
 					for (String song : album.getSongs()) {
 						if (!target.getSongs().contains(song)) {
 							target.addSong(song);
+							newSongsFlag = true;
 						}
 						
 					}
 					updateGenreLists();
-					return true;
+					return newSongsFlag;
 				}
 
 			}
@@ -152,10 +158,12 @@ public class LibraryModel {
 	public boolean addAlbumOneSong(Album album, Song song) {
 		if (!checkForAlbumPresence(album)) {
 			Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
-			target.addSong(song.getTitle());
-			this.albums.add(target);
-			updateGenreLists();
-			return true;
+			if (song.getAlbum().equals(album.getTitle()) && song.getArtist().equals(album.getArtist())) {
+				target.addSong(song.getTitle());
+				this.albums.add(target);
+				updateGenreLists();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -176,7 +184,8 @@ public class LibraryModel {
 				for (String song : target.getSongs()) {
 					removeSong(new Song(song, target.getTitle(), target.getArtist()));
 				}
-				return this.albums.remove(target);
+				this.albums.remove(target);
+				return true;
 			}
 		}
 		return false; 
@@ -268,7 +277,7 @@ public class LibraryModel {
 		ArrayList<Song> result = new ArrayList<Song>();
 		for (Album album : this.albums) {
 			if (album.getGenre().toLowerCase().equals(genre.toLowerCase())) {
-				System.out.println("Genre: " + album.getGenre());
+				//System.out.println("Genre: " + album.getGenre());
 				for (String song : album.getSongs()) {
 					result.add(new Song(song, album.getTitle(), album.getArtist()));
 				}
@@ -403,7 +412,7 @@ public class LibraryModel {
 	 * @return true		Returns true if song with same title, album, and artist is 
 	 * 					 in library
 	 * 		   false    Returns false is song is not currently in library
-	 */
+	 
 	private boolean checkForSongPresence(Song target) {
 		for (Song song : this.library.keySet()) {
 			if (song.equals(target)) {
@@ -412,6 +421,8 @@ public class LibraryModel {
 		}
 		return false;
 	}
+	// Removed for LA2 - Unnecessary, but kept in case of unexpected bugs.
+	*/
 	
 	/**
 	 * This function checks if an album is already present in the current user
@@ -662,12 +673,15 @@ public class LibraryModel {
 				}
 			}
 			PlayList genre_list = searchPlaylistByName(target);
-			if (genre_list == null && songs.size() >= 10) {
-				createPlaylist(target);
-				searchPlaylistByName(target).newSetList(songs);
-			}
-			else if (songs.size() >= 10) {
+			
+			if (songs.size() >= 10) {
+				if (genre_list == null) {
+					createPlaylist(target);
+					genre_list = searchPlaylistByName(target);
+				}
 				genre_list.newSetList(songs);
+			} else if (genre_list != null) {
+				genre_list.newSetList(new ArrayList<>());
 			}
 			
 			if (genre_list != null && genre_list.getSongs().size() < 10) {

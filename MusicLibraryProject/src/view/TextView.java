@@ -752,12 +752,9 @@ public class TextView {
                 if (index >= 0 && index < albums.size()) {
                     Album selected = albums.get(index);
                     if (library.removeAlbum(selected)) {
-                    	for (String song : selected.getSongs()) {
-                    		library.removeSong(new Song(song, selected.getTitle(), selected.getArtist()));
-                    	}
                         System.out.println("Album Removed: " + selected);
                     } else {
-                        System.out.println("Error: Song failed to be removed.");
+                        System.out.println("Error: Album failed to be removed.");
                     }
                 } else {
                     System.out.println("Invalid index. Try again.");
@@ -1016,7 +1013,9 @@ public class TextView {
     			printSongList(songs);
     			System.out.print("\n");
             }
-
+            else {
+            	return;
+            }
         } else {
             System.out.println("Playlist not found.");
         }
