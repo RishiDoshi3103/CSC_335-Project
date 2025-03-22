@@ -57,6 +57,10 @@ public class Album implements Serializable {
 	public void addSong(String song) {
 		songs.add(song);
 	}
+	
+	public void removeSong(String song) {
+		songs.remove(song);
+	}
 
 	public String getTitle() {
 		return title;

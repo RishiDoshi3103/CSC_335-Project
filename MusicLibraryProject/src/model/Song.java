@@ -19,7 +19,6 @@ public class Song implements Serializable {
 	private final String title;
 	private final String album;
 	private final String artist;
-	//private final String genre;
 	
 	public Song(String title, String album, String artist) {
 		
@@ -45,11 +44,6 @@ public class Song implements Serializable {
 		return this.artist;
 	}
 	
-	/**
-	 * public String getGenre() {
-	 * 		return this.genre;
-	 * }
-	 */
   	
 	@Override
 	public String toString() {
