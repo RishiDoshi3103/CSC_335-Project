@@ -1,32 +1,44 @@
 /*
  * File: LibraryModel.java
- * Authors: Kyle Becker / Rishi Doshi
+ * Authors: Kyle Becker / Rishi Doshi (modified for LA2)
  * 
- * Purpose: This file is meant to replicate a user's working Music Library.
- * Songs and albums are loaded from the MusicStore, and stored in respective
- * structures. Library holds songs, albums hold albums, playlists obviously
- * hold playlists, and ratings holds pairs of songs and their respective ratings
- * (when appropriate, as songs are not required, nor inherently possess, ratings.
- * Given the assignment parameters, ranking allows for 1-5, but offers very
- * little functionality aside from those being marked 5 being included and
- * referrable as 'favorites'.
+ * Purpose: Represents a user's music library. Manages songs (with play counts),
+ * albums, playlists, and ratings. Provides functionality for:
+ *   - Adding/removing songs and albums
+ *   - Searching for songs (by title, artist) and albums (by title, artist)
+ *   - Rating songs (and retrieving favorites/top-rated songs)
+ *   - Sorting and shuffling songs
+ *   - Tracking song plays and automatically updating playlists:
+ *         "Most Recently Played" (up to 10 songs, most recent first)
+ *         "Most Frequently Played" (top 10 by play count)
+ *   - Managing user-created playlists
+ * 
+ * All getters return deep copies to preserve encapsulation.
+ * This class is Serializable.
  * 
  */
 
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import database.MusicStore;
 
-public class LibraryModel {
+public class LibraryModel implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+	
+	// Maps each Song to its play count.
 	private HashMap<Song, Integer> library;
-	private ArrayList<Album> albums;
-	private ArrayList<PlayList> playlists;
-	private ArrayList<Rating> ratings;
+	  // List of albums in the library.
+    private final ArrayList<Album> albums;
+    // List of playlists (automatic and user-created).
+    private final ArrayList<PlayList> playlists;
+    // List of ratings for songs.
+    private final ArrayList<Rating> ratings;
 	
 	public LibraryModel() {
 		this.library = new HashMap<Song, Integer>();

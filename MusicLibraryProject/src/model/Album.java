@@ -10,11 +10,15 @@
 
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Album {
+public class Album implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	private String title;
 	private String artist;
 	private String genre;
@@ -32,6 +36,10 @@ public class Album {
    */
 	public Album(String title, String artist, String genre, String year) {
 
+		if(title == null || artist == null || genre == null || year == null) {
+            throw new IllegalArgumentException("Album fields must not be null.");
+        }
+		
 		this.title = title;
 		this.artist = artist;
 		this.genre = genre;
