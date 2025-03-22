@@ -238,6 +238,17 @@ public class TextView {
                     Song selected = songs.get(index);
                     if (library.addSong(selected)) {
                         System.out.println("Song added: " + selected);
+                        ArrayList<Album> albums = store.searchAlbumsByTitle(selected.getAlbum());
+                        for (Album album : albums) {
+                        	if (album.getSongs().contains(selected.getTitle())) {
+                        		if (!library.checkForAlbumPresence(album)) {
+                        			library.addAlbumOneSong(album, selected);
+                        		}
+                        		else {
+                        			library.addAlbumSong(selected);
+                        		}
+                        	}
+                        }
                     } else {
                         System.out.println("Song already in library.");
                     }
@@ -269,7 +280,7 @@ public class TextView {
                         }
                     }
                     System.out.println(addedCount + " song(s) added from: " + selected.getTitle());
-                    if (library.addAlbum(selected)) {
+                    if (library.addAlbumWithAllSongs(selected)) {
                     	System.out.println("Successfully added Album: " + selected.getTitle());
                     }
                     else {
@@ -329,10 +340,11 @@ public class TextView {
             System.out.println("1. List all songs");
             System.out.println("2. Search for a song by title");
             System.out.println("3. Search for a song by artist");
-            System.out.println("4. Rate a song");
-            System.out.println("5. Mark a song as favorite");
-            System.out.println("6. Remove a Song");
-            System.out.println("7. Back to Library Menu");
+            System.out.println("4. Search for songs by genre");
+            System.out.println("5. Rate a song");
+            System.out.println("6. Mark a song as favorite");
+            System.out.println("7. Remove a Song");
+            System.out.println("8. Back to Library Menu");
             System.out.print("Enter choice: ");
             
             String choice = scanner.nextLine().trim();
@@ -347,20 +359,60 @@ public class TextView {
                 	searchSongInLibraryArtist();
                 	break;
                 case "4":
+                	searchSongsByGenre();
+                	break;
+                case "5":
                     rateSongInLibrary();
                     break;
-                case "5":
+                case "6":
                     markSongAsFavorite();
                     break;
-                case "6":
-                	promptRemoveASong();
                 case "7":
+                	promptRemoveASong();
+                case "8":
                     songsRunning = false;
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
+    }
+    private static void searchSongsByGenre() {
+    	System.out.print("Enter Genre to search in library: ");
+    	String genre = scanner.nextLine().trim();
+    	ArrayList<Song> found = library.searchSongsByGenre(genre);
+    	if (found.size() > 0) {
+    		int i = 1;
+    		for (Song song : found) {
+    			System.out.println(Integer.toString(i) + ". " + song.toString());
+    			i++;
+    		}
+    		System.out.print("\nGet Album Information - Enter index or type 'exit': ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                return;
+            }
+            int index = Integer.parseInt(input);
+            if (index >= 0 && index < found.size()) {
+                Song selected = found.get(index);
+                ArrayList<Album> targets = library.searchAlbumsByTitle(selected.getAlbum());
+                if (targets.size() > 0) {
+                	System.out.println("Album Found:");
+                	for (Album target : targets) {
+                		for (String song_check : target.getSongs()) {
+                			if (song_check.equals(selected.getTitle())) {
+                				System.out.println(target.toString());
+                				return;
+                			}
+                		}
+                	}
+                }
+            } else {
+                System.out.println("Invalid index. Try again.");
+            }
+    	} else {
+    		System.out.println("Genre songs not found in library.");
+    	}
     }
     
     private static void listAllSongs() {
@@ -431,12 +483,38 @@ public class TextView {
         String title = scanner.nextLine().trim();
         ArrayList<Song> found = library.searchSongByTitle(title);
         if (found.size() > 0) {
-          int i = 1;
+          int i = 0;
 	        for (Song song : found) {
 	        	System.out.println(Integer.toString(i) + ". " + song.toString());
 	        	i++;
 	        }
-
+	        System.out.print("\nGet Album Information - Enter index or type 'exit': ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                return;
+            }
+            int index = Integer.parseInt(input);
+            if (index >= 0 && index < found.size()) {
+                Song selected = found.get(index);
+                ArrayList<Album> targets = library.searchAlbumsByTitle(selected.getAlbum());
+                if (targets.size() > 0) {
+                	System.out.println("Album Found:");
+                	for (Album target : targets) {
+                		for (String song_check : target.getSongs()) {
+                			if (song_check.equals(selected.getTitle())) {
+                				System.out.println(target.toString());
+                				return;
+                			}
+                		}
+                	}
+                }
+                else {
+                	System.out.println("Album not found..");
+                }
+            } else {
+                System.out.println("Invalid index. Try again.");
+            }
+            
         } else {
             System.out.println("Song not found in library.");
         }
@@ -452,6 +530,29 @@ public class TextView {
     			System.out.println(Integer.toString(i) + ". " + song.toString());
     			i++;
     		}
+    		System.out.print("\nGet Album Information - Enter index or type 'exit': ");
+            String input = scanner.nextLine().trim();
+            if (input.equalsIgnoreCase("exit")) {
+                return;
+            }
+            int index = Integer.parseInt(input);
+            if (index >= 0 && index < found.size()) {
+                Song selected = found.get(index);
+                ArrayList<Album> targets = library.searchAlbumsByTitle(selected.getAlbum());
+                if (targets.size() > 0) {
+                	System.out.println("Album Found:");
+                	for (Album target : targets) {
+                		for (String song_check : target.getSongs()) {
+                			if (song_check.equals(selected.getTitle())) {
+                				System.out.println(target.toString());
+                				return;
+                			}
+                		}
+                	}
+                }
+            } else {
+                System.out.println("Invalid index. Try again.");
+            }
     	} else {
     		System.out.println("Song not found in library.");
     	}
@@ -637,7 +738,7 @@ public class TextView {
         	System.out.print("\n");
         	printAlbumList(albums);
 
-            System.out.println("\nRemove Song from library? Enter index, or type 'exit' to return:");
+            System.out.println("\nRemove Album from library? Enter index, or type 'exit' to return:");
             String input = scanner.nextLine().trim();
             if (input.equalsIgnoreCase("exit")) {
                 break;

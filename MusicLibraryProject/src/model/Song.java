@@ -15,7 +15,6 @@ public class Song {
 	private final String title;
 	private final String album;
 	private final String artist;
-	//private final String genre;
 	
 	public Song(String title, String album, String artist) {
 		this.title = title;
@@ -36,11 +35,6 @@ public class Song {
 		return this.artist;
 	}
 	
-	/**
-	 * public String getGenre() {
-	 * 		return this.genre;
-	 * }
-	 */
   	
 	@Override
 	public String toString() {

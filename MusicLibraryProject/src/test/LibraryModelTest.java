@@ -38,8 +38,8 @@ class LibraryModelTest {
 		String song = "Song";
 		album.addSong(song);
 		
-		assertTrue(lib.addAlbum(album));
-		assertFalse(lib.addAlbum(album));
+		assertTrue(lib.addAlbumWithAllSongs(album));
+		assertFalse(lib.addAlbumWithAllSongs(album));
 	}
 	
 	@Test
@@ -156,8 +156,8 @@ class LibraryModelTest {
 		ArrayList<Album> list = lib.getAllAlbumsInLibrary();
 		assertEquals(list.size(), 0); 
 		
-		lib.addAlbum(album);
-		lib.addAlbum(album1);
+		lib.addAlbumWithAllSongs(album);
+		lib.addAlbumWithAllSongs(album1);
 		list = lib.getAllAlbumsInLibrary();
 		assertEquals(list.size(), 2);
 		assertEquals(list.get(0).toString(), album.toString());
@@ -170,8 +170,8 @@ class LibraryModelTest {
 		Album album1 = new Album("Title1", "Artist1", "Genre1", "2026");
 		String song1 = "song";
 		album.addSong(song1);
-		lib.addAlbum(album);
-		lib.addAlbum(album1);
+		lib.addAlbumWithAllSongs(album);
+		lib.addAlbumWithAllSongs(album1);
 
 		ArrayList<Album> list = lib.searchAlbumsByTitle("Title1");
 		assertEquals(list.size(), 1);
@@ -189,8 +189,8 @@ class LibraryModelTest {
 		Album album1 = new Album("Title1", "Artist1", "Genre1", "2026");
 		String song1 = "song";
 		album.addSong(song1);
-		lib.addAlbum(album);
-		lib.addAlbum(album1);
+		lib.addAlbumWithAllSongs(album);
+		lib.addAlbumWithAllSongs(album1);
 		
 		ArrayList<Album> list = lib.searchAlbumsByArtist("Artist1");
 		assertEquals(list.size(), 1);
@@ -336,9 +336,9 @@ class LibraryModelTest {
 		Album album1 = new Album("1", "1", "1", "1");
 		Album album2 = new Album("2", "2", "2", "2");
 		
-		lib.addAlbum(album);
-		lib.addAlbum(album1);
-		lib.addAlbum(album2);
+		lib.addAlbumWithAllSongs(album);
+		lib.addAlbumWithAllSongs(album1);
+		lib.addAlbumWithAllSongs(album2);
 		
 		ArrayList<Album> records = lib.getAllAlbumsInLibrary();
 		assertEquals(records.size(), 3);
