@@ -12,25 +12,36 @@
 
 package model;
 
-public class Rating {
+import java.io.Serializable;
+
+public class Rating implements Serializable {
 	
-	private Song song;
+	private static final long serialVersionUID = 1L;
+	
+	private final Song song;
 	private int rating;
 	
-	public Rating(Song target, int score) {
-		this.song = target;
-		this.rating = score;
-	}
-	
-	public void setRating(int num) {
-		this.rating = num;
-	}
-	public Song getSong() {
-		return this.song;
-	}
-	
-	public int getRating() {
-		return this.rating;
-	}
+	public Rating(Song song, int rating) {
+        if(song == null) {
+            throw new IllegalArgumentException("Song cannot be null.");
+        }
+        this.song = song;
+        setRating(rating);
+    }
+    
+    public Song getSong() {
+        return song;
+    }
+    
+    public int getRating() {
+        return rating;
+    }
+    
+    public void setRating(int rating) {
+        if(rating < 1 || rating > 5) {
+            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+        }
+        this.rating = rating;
+    }
 }
 
