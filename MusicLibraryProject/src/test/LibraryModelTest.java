@@ -208,7 +208,7 @@ class LibraryModelTest {
 		
 		lib.createPlaylist("playlist2");
 		ArrayList<String> list = lib.getPlaylists();
-		assertEquals(list.toString(), "[Most Recently Played, Most Frequently Played, Favorite Songs, playlist1, playlist2]");
+		assertEquals(list.toString(), "[Most Recently Played, Most Frequently Played, Favorite Songs, Top Rated, playlist1, playlist2]");
 		
 		assertFalse(lib.removePlaylist("wrong name"));
 		assertTrue(lib.removePlaylist("playlist1"));
