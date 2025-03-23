@@ -10,11 +10,13 @@
 
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class Album {
+public class Album implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private String title;
 	private String artist;
 	private String genre;
@@ -48,6 +50,10 @@ public class Album {
     */
 	public void addSong(String song) {
 		songs.add(song);
+	}
+	
+	public void removeSong(String song) {
+		songs.remove(song);
 	}
 
 	public String getTitle() {

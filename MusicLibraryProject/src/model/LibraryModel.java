@@ -1,36 +1,52 @@
 /*
  * File: LibraryModel.java
- * Authors: Kyle Becker / Rishi Doshi
+ * Authors: Kyle Becker / Rishi Doshi (modified for LA2)
  * 
- * Purpose: This file is meant to replicate a user's working Music Library.
- * Songs and albums are loaded from the MusicStore, and stored in respective
- * structures. Library holds songs, albums hold albums, playlists obviously
- * hold playlists, and ratings holds pairs of songs and their respective ratings
- * (when appropriate, as songs are not required, nor inherently possess, ratings.
- * Given the assignment parameters, ranking allows for 1-5, but offers very
- * little functionality aside from those being marked 5 being included and
- * referrable as 'favorites'.
+ *
+ * Purpose: Represents a user's music library. Manages songs (with play counts),
+ * albums, playlists, and ratings. Provides functionality for:
+ *   - Adding/removing songs and albums
+ *   - Searching for songs (by title, artist) and albums (by title, artist)
+ *   - Rating songs (and retrieving favorites/top-rated songs)
+ *   - Sorting and shuffling songs
+ *   - Tracking song plays and automatically updating playlists:
+ *         "Most Recently Played" (up to 10 songs, most recent first)
+ *         "Most Frequently Played" (top 10 by play count)
+ *   - Managing user-created playlists
+ * 
+ * All getters return deep copies to preserve encapsulation.
+ * This class is Serializable.
  * 
  */
 
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import database.MusicStore;
 
-public class LibraryModel {
+public class LibraryModel implements Serializable{
 	
-	private ArrayList<Song> library;
+	private static final long serialVersionUID = 1L;
+	private HashMap<Song, Integer> library;
 	private ArrayList<Album> albums;
 	private ArrayList<PlayList> playlists;
 	private ArrayList<Rating> ratings;
 	
 	public LibraryModel() {
-		this.library = new ArrayList<Song>();
+		this.library = new HashMap<Song, Integer>();
 		this.playlists = new ArrayList<PlayList>();
 		this.albums = new ArrayList<Album>();
 		this.ratings = new ArrayList<Rating>();
+		
+		// Created For Every User
+		createPlaylist("Most Recently Played");
+		createPlaylist("Most Frequently Played");
+		createPlaylist("Favorite Songs");
+		createPlaylist("Top Rated");
 	}
 	
 	/**
@@ -46,12 +62,49 @@ public class LibraryModel {
 	 * 		   false Returns false if song not added
 	 */
 	public boolean addSong(Song song) {
-		if (!checkForSongPresence(song)) {
-			Song target = new Song(song.getTitle(), song.getAlbum(), song.getArtist());
-			this.library.add(target);
+		if (!this.library.containsKey(song)) {
+			this.library.put(song, 0);
+			updateGenreLists();
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * This function removes a song from library
+	 * 
+	 * @param song
+	 * @return true  if successfully removed
+	 * 		   false if unsuccessfully removed
+	 */
+	public boolean removeSong(Song song) {
+		if (this.library.containsKey(song)) {
+			this.library.remove(song);
+			for (Album album : this.albums) {
+				if (album.getTitle().equals(song.getAlbum()) && album.getArtist().equals(song.getArtist())) {
+					album.removeSong(song.getTitle());
+				}
+			}
+			updateGenreLists();
+			albumCleanUp();
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Iterator-safe helper function to clean up and remove Albums,
+	 *  in case any have all songs removed.
+	 */
+	private void albumCleanUp() {
+		ArrayList<Album> albumsToRemove = new ArrayList<>();
+		
+		for (Album album : this.albums) {
+			if (album.getSongs().isEmpty()) {
+				albumsToRemove.add(album);
+			}
+		}
+		this.albums.removeAll(albumsToRemove);
 	}
 	
 	/**
@@ -64,21 +117,110 @@ public class LibraryModel {
 	 * a copy of the album and returns true. It it already exists, returns
 	 * false.
 	 * 
+	 * Also, adds any songs not currently in library that were added with
+	 * the album.
+	 * 
 	 * @param   album  Album class to be added
 	 * @return  true   Returns true if album successfully added 
 	 * 			false  Returns false if song not added
 	 */
-	public boolean addAlbum(Album album) {
+	public boolean addAlbumWithAllSongs(Album album) {
 		if (!checkForAlbumPresence(album)) {
 			Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
 			for (String song : album.getSongs()) {
 				target.addSong(song);
+				addSong(new Song(song, album.getTitle(), album.getArtist()));
 			}
 			this.albums.add(target);
+			updateGenreLists();
 			return true;
+		} else {
+			for (Album target : this.albums) {
+				if (album.getTitle().toLowerCase().equals(target.getTitle().toLowerCase()) 
+						&& album.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
+					boolean newSongsFlag = false;
+					for (String song : album.getSongs()) {
+						if (!target.getSongs().contains(song)) {
+							target.addSong(song);
+							newSongsFlag = true;
+						}
+						
+					}
+					updateGenreLists();
+					return newSongsFlag;
+				}
+
+			}
+			return false;
+		}
+	}
+	
+	/**
+	 * Similar to above, but adds an album with only one song. 
+	 * 
+	 * @param album	 targeted album to add
+	 * @param song   Related song to add
+	 * @return true  if successfully added
+	 * 		   false if unsuccessfully added
+	 */
+	public boolean addAlbumOneSong(Album album, Song song) {
+		if (!checkForAlbumPresence(album)) {
+			Album target = new Album(album.getTitle(), album.getArtist(), album.getGenre(), album.getYear());
+			if (song.getAlbum().equals(album.getTitle()) && song.getArtist().equals(album.getArtist())) {
+				target.addSong(song.getTitle());
+				this.albums.add(target);
+				updateGenreLists();
+				return true;
+			}
 		}
 		return false;
 	}
+	
+	/**
+	 * This function searches for target album and removes it from the
+	 * album library.
+	 * 
+	 * @param   album  Album to be removed
+	 * @return  true   Returns true if album successfully removed
+	 * 			false  Returns false if album not found, or failed to be removed
+	 */
+	public boolean removeAlbum(Album album) {
+		for (Album target : this.albums) {
+			if (target.getTitle().equals(album.getTitle()) 
+					&& target.getArtist().equals(album.getArtist())
+					&& target.getYear().equals(album.getYear())) {
+				for (String song : target.getSongs()) {
+					removeSong(new Song(song, target.getTitle(), target.getArtist()));
+				}
+				this.albums.remove(target);
+				return true;
+			}
+		}
+		return false; 
+	}
+	
+	/**
+	 * This function adds a song to a pre-existing album, if it exists
+	 * and does not have the song already listed.
+	 * 
+	 * @param  song
+	 * @return true  if song successfully added
+	 * 		   false is song unsuccessfully added
+	 */
+	public boolean addAlbumSong(Song song) {
+		for (Album album : this.albums) {
+			if (album.getTitle().equals(song.getAlbum())
+					&& album.getArtist().equals(song.getArtist())) {
+				if (!album.getSongs().contains(song.getTitle())) {
+					album.addSong(song.getTitle());
+					updateGenreLists();
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 	/**
 	 * Returns a deep copy list of all songs, adds extra levels of encapsulation
@@ -88,7 +230,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> getAllSongs() {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
 			result.add(addition);
 		}
@@ -104,7 +246,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> searchSongByTitle(String title) {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			if (target.getTitle().toLowerCase().equals(title.toLowerCase()) ||
 					target.getTitle().toLowerCase().contains(title.toLowerCase())) {
 				Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
@@ -123,7 +265,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<Song> searchSongByArtist(String artist) {
 		ArrayList<Song> result = new ArrayList<Song>();
-		for (Song target : this.library) {
+		for (Song target : this.library.keySet()) {
 			if (target.getArtist().equalsIgnoreCase(artist) ||
 					target.getArtist().toLowerCase().contains(artist.toLowerCase())) {
 				Song addition = new Song(target.getTitle(), target.getAlbum(), target.getArtist());
@@ -133,6 +275,24 @@ public class LibraryModel {
 		return result;
 	}
 	
+	/**
+	 * Searches for all songs in an album, based on genre
+	 * 
+	 * @param  genre
+	 * @return result an arraylist of songs that are <genre>
+	 */
+	public ArrayList<Song> searchSongsByGenre(String genre) {
+		ArrayList<Song> result = new ArrayList<Song>();
+		for (Album album : this.albums) {
+			if (album.getGenre().toLowerCase().equals(genre.toLowerCase())) {
+				//System.out.println("Genre: " + album.getGenre());
+				for (String song : album.getSongs()) {
+					result.add(new Song(song, album.getTitle(), album.getArtist()));
+				}
+			}
+		}
+		return result;
+	}
 	/**
 	 * This function checks if the target Song has already been rated, and
 	 * if not adds the Song-Integer rating pair. If it has already been
@@ -146,13 +306,34 @@ public class LibraryModel {
 			if (r.getSong().getTitle().equalsIgnoreCase(song.getTitle())
 					&& r.getSong().getAlbum().equalsIgnoreCase(song.getAlbum())) {
 				r.setRating(num);
+				if (num >= 4) {
+					searchPlaylistByName("Favorite Songs").newSetList(getFavorites());
+					updateTopRated();
+				}
 				return;
 			}
 		}
 		Rating rating = new Rating(song, num);
 		ratings.add(rating);
+		if (num >= 4) {
+			searchPlaylistByName("Favorite Songs").newSetList(getFavorites());
+			updateTopRated();
+		}
 	}
 	
+	/** 
+	 * This function returns a Deep Copy list of Songs that have
+	 * been rated.
+	 * 
+	 * @return ArrayList<Rating> List of rated songs
+	 */
+	public ArrayList<Rating> getRatedSongs() {
+		ArrayList<Rating> result = new ArrayList<Rating>();
+		for (Rating r : this.ratings) {
+			result.add(new Rating(r.getSong(), r.getRating()));
+		}
+		return result;
+	}
 	
 	/**
 	 * Returns an ArrayList of Strings that represent all the artists
@@ -162,7 +343,7 @@ public class LibraryModel {
 	 */
 	public ArrayList<String> getArtists() {
 		ArrayList<String> list = new ArrayList<String>();
-		for (Song song : this.library) {
+		for (Song song : this.library.keySet()) {
 			if (!list.contains(song.getArtist())) {
 				list.add(song.getArtist());
 			}
@@ -239,27 +420,27 @@ public class LibraryModel {
 	 * @return true		Returns true if song with same title, album, and artist is 
 	 * 					 in library
 	 * 		   false    Returns false is song is not currently in library
-	 */
+	 
 	private boolean checkForSongPresence(Song target) {
-		for (Song song : this.library) {
-			if (song.getTitle().toLowerCase().equals(target.getTitle().toLowerCase())
-			  && song.getAlbum().toLowerCase().equals(target.getAlbum().toLowerCase())
-			  && song.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
+		for (Song song : this.library.keySet()) {
+			if (song.equals(target)) {
 				return true;
 			}
 		}
 		return false;
 	}
+	// Removed for LA2 - Unnecessary, but kept in case of unexpected bugs.
+	*/
 	
 	/**
-	 * This helper function checks if an album is already present in the current user
+	 * This function checks if an album is already present in the current user
 	 * library. It returns true if a copy is present, false if not.
 	 * 
 	 * @param  target Album class object to search for in library
 	 * @return true   Returns true if album with same data is in library
 	 *         false  Returns false if not found
 	 */
-	private boolean checkForAlbumPresence(Album target) {
+	public boolean checkForAlbumPresence(Album target) {
 		for (Album album : this.albums) {
 			if (album.getTitle().toLowerCase().equals(target.getTitle().toLowerCase()) 
 					&& album.getArtist().toLowerCase().equals(target.getArtist().toLowerCase())) {
@@ -323,10 +504,8 @@ public class LibraryModel {
 			return false;
 		}
 		
-		for(Song existing : targetPlaylist.getSongs()) {
-			if(existing.getTitle().equalsIgnoreCase(s.getTitle())){
-				return false; // Song is Already is in the Playlist
-			}
+		if (targetPlaylist.getSongs().contains(s)) {
+			return false;
 		}
 		
 		//If the song is not found, then add the song
@@ -406,5 +585,116 @@ public class LibraryModel {
 			}
 		}
 		return faves;
+	}
+	
+	/**
+	 * This function represents the playing of a song, based on the songs
+	 * available in the library. If the target song is not in the library,
+	 * it returns null. If the song is in the library, it increments its'
+	 * play count hash value, updates the Most Recently Played playlist,
+	 * and updates the Most Frequently Played playlist.
+	 */
+	public Song playSong(Song song) {
+		if (!library.containsKey(song)) {
+			return null;
+		}
+		int incrementCount = library.get(song) + 1;
+		library.put(song, incrementCount);
+		searchPlaylistByName("Most Recently Played").addToRecent(song);
+		updateMostPlayed();
+		return song;
+	}
+	
+	/*
+	 * This function converts the song/playcounts in the hashmap to an
+	 * ArrayList of the entries, perform a bubble sort to get the
+	 * necessary values to the front, then extract the first relevant
+	 * songs into specific list of songs that gets assigned in the 
+	 * Most Frequently Played playlist. 
+	 */
+	public void updateMostPlayed() {
+        ArrayList<Map.Entry<Song, Integer>> songList = new ArrayList<>(library.entrySet());
+
+        for (int i = 0; i < songList.size(); i++) {
+            for (int j = i + 1; j < songList.size(); j++) {
+                if (songList.get(i).getValue() < songList.get(j).getValue()) {
+                    Map.Entry<Song, Integer> temp = songList.get(i);
+                    songList.set(i, songList.get(j));
+                    songList.set(j, temp);
+                }
+            }
+        }
+
+        // Get the top 10 songs from the sorted list
+        int max = 10;
+        if (songList.size() < max) {
+        	max = songList.size();
+        }
+        ArrayList<Song> topSongs = new ArrayList<>();
+        for (int i = 0; i < max; i++) {
+        	if (songList.get(i).getValue() > 0) {
+            topSongs.add(songList.get(i).getKey());
+        	}
+        }
+
+        searchPlaylistByName("Most Frequently Played").newSetList(topSongs);
+    }
+	
+	/**
+	 * This function automatically updates the Top Rated Playlist
+	 * with any songs that have a 4 or 5 rating
+	 */
+	public void updateTopRated() {
+		ArrayList<Song> faves = new ArrayList<Song>();
+		for (Rating pair : this.ratings) {
+			if (pair.getRating() == 5 || pair.getRating() == 4) {
+				faves.add(pair.getSong());
+			}
+		}
+		searchPlaylistByName("Top Rated").newSetList(faves);
+	}
+	
+	
+	/**
+	 * This absolutely monstrous nightmare of a function loops through
+	 * every album, gathers all the possible genres into a list, then 
+	 * goes through every album and adds any songs that'd match up 
+	 * to each genre. If the resulting list is >10, it replaces the
+	 * existing playlist or creates one with those songs. 
+	 */
+	public void updateGenreLists() {
+		ArrayList<String> genres = new ArrayList<String>();
+		for (Album album : this.albums) {
+			if (!genres.contains(album.getGenre())) {
+				genres.add(album.getGenre());
+			}
+		}
+		
+		for (String target : genres) {
+			ArrayList<Song> songs = new ArrayList<Song>();
+			for (Album contents : this.albums) {
+				if (contents.getGenre().equals(target)) {
+					for (String song : contents.getSongs()) {
+						Song jam = new Song(song, contents.getTitle(), contents.getArtist());
+						songs.add(jam);
+					}
+				}
+			}
+			PlayList genre_list = searchPlaylistByName(target);
+			
+			if (songs.size() >= 10) {
+				if (genre_list == null) {
+					createPlaylist(target);
+					genre_list = searchPlaylistByName(target);
+				}
+				genre_list.newSetList(songs);
+			} else if (genre_list != null) {
+				genre_list.newSetList(new ArrayList<>());
+			}
+			
+			if (genre_list != null && genre_list.getSongs().size() < 10) {
+				removePlaylist(target);
+			}
+		}
 	}
 }

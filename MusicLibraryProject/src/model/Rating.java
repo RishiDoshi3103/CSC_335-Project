@@ -12,8 +12,11 @@
 
 package model;
 
-public class Rating {
+import java.io.Serializable;
+
+public class Rating implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private Song song;
 	private int rating;
 	
@@ -23,6 +26,9 @@ public class Rating {
 	}
 	
 	public void setRating(int num) {
+//		 if(rating < 1 || rating > 5) {
+//	            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+//	        }
 		this.rating = num;
 	}
 	public Song getSong() {

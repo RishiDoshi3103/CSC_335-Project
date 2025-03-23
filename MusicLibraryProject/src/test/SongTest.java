@@ -18,5 +18,21 @@ class SongTest {
 
 		assertEquals(song1.toString(), "test_title by test_artist | Album: test_album");
 	}
+	
+	@Test
+	void testSongEquals() {
+		Song song1 = new Song("test", "test", "test");
+		Song song2 = new Song("test", "test", "test");
+		Song song3 = new Song("BAD", "BAD", "BAD");
+		
+		// Same Object
+		assertTrue(song1.equals(song1));
+		
+		// Same Data
+		assertTrue(song1.equals(song2));
+		
+		// Different
+		assertFalse(song1.equals(song3));
+	}
 
 }
