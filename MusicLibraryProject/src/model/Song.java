@@ -10,8 +10,11 @@
 package model;
 
 import java.util.Objects;
+import java.io.Serializable;
 
-public class Song {
+public class Song implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private final String title;
 	private final String album;
 	private final String artist;

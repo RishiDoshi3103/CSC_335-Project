@@ -11,11 +11,14 @@
 
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class PlayList {
+public class PlayList implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private ArrayList<Song> songs;
 	
