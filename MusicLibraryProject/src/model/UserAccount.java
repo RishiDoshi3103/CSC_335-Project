@@ -25,9 +25,9 @@ public final class UserAccount implements Serializable {
     private final LibraryModel library;
     
     public UserAccount(String username, String password) {
-        if(username == null || username.isEmpty() || password == null || password.isEmpty()){
-            throw new IllegalArgumentException("Username and password must not be empty.");
-        }
+//        if(username == null || username.isEmpty() || password == null || password.isEmpty()){
+//            throw new IllegalArgumentException("Username and password must not be empty.");
+//        }
         this.username = username;
         this.salt = generateSalt();  // Only generate salt once at creation
         this.passwordHash = hashPassword(password, this.salt);

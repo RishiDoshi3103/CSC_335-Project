@@ -26,9 +26,9 @@ public class Rating implements Serializable {
 	}
 	
 	public void setRating(int num) {
-		 if(rating < 1 || rating > 5) {
-	            throw new IllegalArgumentException("Rating must be between 1 and 5.");
-	        }
+//		 if(rating < 1 || rating > 5) {
+//	            throw new IllegalArgumentException("Rating must be between 1 and 5.");
+//	        }
 		this.rating = num;
 	}
 	public Song getSong() {

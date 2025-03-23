@@ -80,6 +80,7 @@ public final class UserManager implements Serializable {
         }
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             Map<String, UserAccount> loadedUsers = (Map<String, UserAccount>) ois.readObject();
+            this.users = loadedUsers; // <--- ASSIGN THE LOADED USERS HERE!
             System.out.println("Loaded users: " + loadedUsers.keySet());
             for (String username : loadedUsers.keySet()) {
                 System.out.println(username + "'s library: " + loadedUsers.get(username).getLibrary());
